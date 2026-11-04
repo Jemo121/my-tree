@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!--
+    DOMAIN VARIANTS — change the two marked blocks to switch
+    Active: emilio.eguia.me
+  -->
+
+  <!-- emilio.eguia.me --> <title>Emilio Eguia</title>
+  <!-- eguia.me: <title>Eguia</title> -->
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&display=swap" rel="stylesheet">
+
+  <style>
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --black:  #0A0A0B;
+      --deep:   #111114;
+      --grey:   #1E1E22;
+      --muted:  #4A4A52;
+      --light:  #C8C8CE;
+      --amber:  #D4872A;
+      --amber2: #B36E1C;
+    }
+
+    html, body {
+      height: 100%;
+      overflow: hidden;
+      background: var(--black);
+      color: var(--light);
+    }
+
+    /* Film grain overlay — animated SVG noise */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: -60%;
+      width: 220%;
+      height: 220%;
+      opacity: 0.085;
+      pointer-events: none;
+      z-index: 200;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.68' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23g)'/%3E%3C/svg%3E");
+      animation: grain 0.22s steps(1) infinite;
+      mix-blend-mode: overlay;
+    }
+
+    @keyframes grain {
+      0%   { transform: translate(0, 0) scale(1.05); }
+      20%  { transform: translate(-5%, -3%) scale(1.05); }
+      40%  { transform: translate(4%, 5%) scale(1.05); }
+      60%  { transform: translate(-3%, 2%) scale(1.05); }
+      80%  { transform: translate(6%, -4%) scale(1.05); }
+    }
+
+    /* Cinematic letterbox — top and bottom bars */
+    .bar {
+      position: fixed;
+      left: 0;
+      right: 0;
+      background: var(--black);
+      z-index: 100;
+      pointer-events: none;
+      animation: letterbox-in 1.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+    }
+
+    .bar--top {
+      top: 0;
+      animation-name: bar-top;
+    }
+
+    .bar--bottom {
+      bottom: 0;
+      animation-name: bar-bottom;
+    }
+
+    @keyframes bar-top {
+      from { height: 50vh; }
+      to   { height: clamp(2.5rem, 5vw, 4rem); }
+    }
+
+    @keyframes bar-bottom {
+      from { height: 50vh; }
+      to   { height: clamp(2.5rem, 5vw, 4rem); }
+    }
+
+    .page {
+      position: relative;
+      height: 100vh;
+      display: grid;
+      place-items: center;
+      z-index: 1;
+    }
+
+    .content {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: clamp(1.2rem, 2.2vw, 2rem);
+      text-align: center;
+      padding: 0 clamp(2rem, 8vw, 6rem);
+      opacity: 0;
+      animation: reveal 1.8s ease forwards 1.2s;
+    }
+
+    @keyframes reveal {
+      from { opacity: 0; transform: scale(0.98); }
+      to   { opacity: 1; transform: scale(1); }
+    }
+
+    .eyebrow {
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-size: clamp(0.58rem, 0.9vw, 0.68rem);
+      font-weight: 300;
+      font-style: italic;
+      letter-spacing: 0.35em;
+      text-transform: uppercase;
+      color: var(--amber);
+    }
+
+    h1 {
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-size: clamp(3.5rem, 10vw, 8rem);
+      font-weight: 300;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      line-height: 0.9;
+      color: var(--light);
+    }
+
+    h1 span {
+      display: block;
+      font-style: italic;
+      font-weight: 300;
+      font-size: 0.52em;
+      letter-spacing: 0.25em;
+      color: var(--muted);
+      margin-top: 0.4em;
+    }
+
+    /* Breathe pulse on name */
+    h1 {
+      animation: reveal 1.8s ease forwards 1.2s, breathe 5s ease-in-out infinite 3.5s;
+    }
+
+    @keyframes breathe {
+      0%, 100% { opacity: 1; }
+      50%       { opacity: 0.78; }
+    }
+
+    .rule {
+      width: clamp(2.5rem, 6vw, 5rem);
+      height: 1px;
+      background: var(--amber);
+      opacity: 0.6;
+    }
+
+    .subline {
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-size: clamp(0.85rem, 1.5vw, 1rem);
+      font-weight: 300;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--muted);
+      line-height: 2;
+    }
+
+    .cta {
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-size: clamp(0.7rem, 1vw, 0.8rem);
+      font-weight: 300;
+      font-style: italic;
+      letter-spacing: 0.2em;
+      color: var(--amber);
+      text-decoration: none;
+      border-bottom: 1px solid var(--amber2);
+      padding-bottom: 1px;
+      opacity: 0.85;
+      transition: opacity 0.3s ease;
+    }
+
+    .cta:hover {
+      opacity: 1;
+    }
+
+    /* Top/bottom bar content (credits-style) */
+    .bar-label {
+      position: fixed;
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-size: 0.58rem;
+      font-weight: 300;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--muted);
+      z-index: 101;
+      pointer-events: none;
+      opacity: 0;
+      animation: fade-in 1s ease forwards 2s;
+    }
+
+    .bar-label--tl {
+      top: clamp(0.9rem, 1.8vw, 1.4rem);
+      left: clamp(1.5rem, 4vw, 3rem);
+    }
+
+    .bar-label--tr {
+      top: clamp(0.9rem, 1.8vw, 1.4rem);
+      right: clamp(1.5rem, 4vw, 3rem);
+    }
+
+    .bar-label--bl {
+      bottom: clamp(0.9rem, 1.8vw, 1.4rem);
+      left: clamp(1.5rem, 4vw, 3rem);
+    }
+
+    .bar-label--br {
+      bottom: clamp(0.9rem, 1.8vw, 1.4rem);
+      right: clamp(1.5rem, 4vw, 3rem);
+    }
+
+    @keyframes fade-in {
+      to { opacity: 1; }
+    }
+
+    @media (max-width: 480px) {
+      .bar-label { display: none; }
+    }
+
+  /* ---- pro ---- */
+  @keyframes fade-img { from { opacity: 0 } to { opacity: 1 } }
+  .accent-img { position: fixed; bottom: clamp(2.5rem, 5vw, 4rem); right: clamp(2rem, 5vw, 4rem); width: clamp(130px, 20vw, 200px); z-index: 2; pointer-events: none; margin: 0; opacity: 0; animation: fade-img 1.5s ease forwards 3.5s; }
+  .accent-img img { width: 100%; display: block; filter: grayscale(0.75) contrast(1.3) brightness(0.8); }
+  </style>
+</head>
+<body>
+  <div class="bar bar--top" aria-hidden="true"></div>
+  <div class="bar bar--bottom" aria-hidden="true"></div>
+
+  <!-- emilio.eguia.me -->
+  <span class="bar-label bar-label--tl">emilio.eguia.me</span>
+  <!-- eguia.me:
+  <span class="bar-label bar-label--tl">eguia.me</span>
+  -->
+
+  <span class="bar-label bar-label--tr">2025</span>
+
+  <main class="page">
+    <div class="content">
+      <p class="eyebrow">Something is being made</p>
+
+      <!-- emilio.eguia.me -->
+      <h1>
+        Emilio
+        <span>Eguia</span>
+      </h1>
+      <!-- eguia.me:
+      <h1>
+        Eguia
+        <span>Family</span>
+      </h1>
+      -->
+
+      <div class="rule" aria-hidden="true"></div>
+
+      <!-- emilio.eguia.me -->
+      <p class="subline">This space is being built</p>
+      <!-- eguia.me:
+      <p class="subline">Coming together here</p>
+      -->
+
+      <a class="cta" href="mailto:emiliotomillo150803@gmail.com">reach out</a>
+    </div>
+  </main>
+
+  <span class="bar-label bar-label--bl">© 2025</span>
+  <span class="bar-label bar-label--br">MX</span>
+  <figure class="accent-img" aria-hidden="true"><img src="https://picsum.photos/seed/cine9/280/200" alt="" loading="lazy"></figure>
+</body>
+</html>

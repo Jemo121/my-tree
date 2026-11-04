@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!--
+    DOMAIN VARIANTS — change the two marked blocks to switch
+    Active: emilio.eguia.me
+  -->
+
+  <!-- emilio.eguia.me --> <title>Emilio Eguia</title>
+  <!-- eguia.me: <title>Eguia</title> -->
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Space+Grotesk:wght@300;400&display=swap" rel="stylesheet">
+
+  <style>
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --ink:    #0D0D0D;
+      --paper:  #F8F7F4;
+      --grey:   #888;
+      --border: #DDDDD8;
+      --accent: #FF3F1F;
+    }
+
+    html, body {
+      height: 100%;
+      overflow: hidden;
+      background: var(--paper);
+      color: var(--ink);
+    }
+
+    .page {
+      height: 100vh;
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+      overflow: hidden;
+    }
+
+    /* Masthead — like a newspaper header */
+    .masthead {
+      border-bottom: 3px double var(--ink);
+      padding: clamp(0.8rem, 2vw, 1.4rem) clamp(1.5rem, 5vw, 4rem);
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 1rem;
+      opacity: 0;
+      animation: drop-in 0.7s ease forwards 0.2s;
+    }
+
+    @keyframes drop-in {
+      from { opacity: 0; transform: translateY(-8px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .masthead-date {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 0.6rem;
+      font-weight: 300;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--grey);
+    }
+
+    .masthead-title {
+      font-family: 'Libre Baskerville', Georgia, serif;
+      font-size: clamp(0.65rem, 1.2vw, 0.8rem);
+      font-weight: 400;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--ink);
+    }
+
+    .masthead-price {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 0.6rem;
+      font-weight: 300;
+      color: var(--grey);
+    }
+
+    .content {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      align-items: center;
+      padding: clamp(2rem, 6vw, 5rem) clamp(1.5rem, 5vw, 4rem);
+      gap: clamp(2rem, 5vw, 5rem);
+    }
+
+    .headline-col {
+      display: flex;
+      flex-direction: column;
+      gap: clamp(1.2rem, 2vw, 2rem);
+    }
+
+    .kicker {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 0.6rem;
+      font-weight: 400;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--accent);
+      opacity: 0;
+      animation: rise 0.6s ease forwards 0.8s;
+    }
+
+    @keyframes rise {
+      from { opacity: 0; transform: translateY(8px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    h1 {
+      font-family: 'Libre Baskerville', Georgia, serif;
+      font-size: clamp(3rem, 8vw, 7rem);
+      font-weight: 700;
+      line-height: 0.9;
+      letter-spacing: -0.03em;
+      opacity: 0;
+      animation: rise 1s cubic-bezier(0.2, 0, 0, 1) forwards 1s;
+    }
+
+    .lede {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: clamp(0.78rem, 1.2vw, 0.88rem);
+      font-weight: 300;
+      line-height: 1.7;
+      color: var(--grey);
+      max-width: 30ch;
+      opacity: 0;
+      animation: rise 0.6s ease forwards 1.6s;
+    }
+
+    .cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 0.65rem;
+      font-weight: 400;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--paper);
+      background: var(--ink);
+      text-decoration: none;
+      padding: 0.6rem 1.2rem;
+      opacity: 0;
+      animation: rise 0.6s ease forwards 2s;
+      transition: background 0.2s ease;
+      width: fit-content;
+    }
+
+    .cta:hover { background: var(--accent); }
+
+    /* Right col — large display number, editorial feel */
+    .display-col {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 0.5rem;
+      border-left: 1px solid var(--border);
+      padding-left: clamp(1.5rem, 3vw, 3rem);
+      opacity: 0;
+      animation: rise 1s ease forwards 1.4s;
+    }
+
+    .display-num {
+      font-family: 'Libre Baskerville', Georgia, serif;
+      font-size: clamp(5rem, 15vw, 13rem);
+      font-weight: 700;
+      line-height: 0.85;
+      letter-spacing: -0.06em;
+      color: var(--border);
+    }
+
+    .display-label {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 0.58rem;
+      font-weight: 300;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--grey);
+      text-align: right;
+    }
+
+    /* Footer rule */
+    .footer {
+      border-top: 1px solid var(--border);
+      padding: clamp(0.6rem, 1.5vw, 1rem) clamp(1.5rem, 5vw, 4rem);
+      display: flex;
+      justify-content: space-between;
+      opacity: 0;
+      animation: rise 0.5s ease forwards 2.4s;
+    }
+
+    .footer-text {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 0.55rem;
+      font-weight: 300;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--grey);
+    }
+
+    @media (max-width: 600px) {
+      .content { grid-template-columns: 1fr; }
+      .display-col { display: none; }
+    }
+
+  /* ---- pro ---- */
+  @keyframes fade-img { from { opacity: 0 } to { opacity: 1 } }
+  .accent-img { position: fixed; bottom: clamp(2.5rem, 5vw, 4rem); right: clamp(2rem, 5vw, 4rem); width: clamp(130px, 18vw, 190px); z-index: 2; pointer-events: none; margin: 0; opacity: 0; animation: fade-img 1s ease forwards 3s; }
+  .accent-img img { width: 100%; display: block; filter: grayscale(0.85) contrast(1.2) brightness(0.88);
+    border: 1px solid #DDDDD8; }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <header class="masthead">
+      <span class="masthead-date">Est. 2025</span>
+
+      <!-- emilio.eguia.me -->
+      <span class="masthead-title">Emilio Eguia — emilio.eguia.me</span>
+      <!-- eguia.me:
+      <span class="masthead-title">The Eguia Family — eguia.me</span>
+      -->
+
+      <span class="masthead-price">Site in progress</span>
+    </header>
+
+    <main class="content">
+      <div class="headline-col">
+        <span class="kicker">Construction notice</span>
+
+        <!-- emilio.eguia.me -->
+        <h1>Emilio<br>Eguia</h1>
+        <!-- eguia.me:
+        <h1>The<br>Eguia<br>Family</h1>
+        -->
+
+        <!-- emilio.eguia.me -->
+        <p class="lede">This space is being built. Come back soon — something good is on the way.</p>
+        <!-- eguia.me:
+        <p class="lede">Coming together. The family is building something here.</p>
+        -->
+
+        <a class="cta" href="mailto:emiliotomillo150803@gmail.com">Contact</a>
+      </div>
+
+      <div class="display-col" aria-hidden="true">
+        <span class="display-num">25</span>
+        <span class="display-label">2025</span>
+      </div>
+    </main>
+
+    <footer class="footer">
+      <!-- emilio.eguia.me -->
+      <span class="footer-text">© 2025 Emilio Eguia</span>
+      <!-- eguia.me:
+      <span class="footer-text">© 2025 Eguia</span>
+      -->
+      <span class="footer-text">All rights reserved</span>
+    </footer>
+  </div>
+  <figure class="accent-img" aria-hidden="true"><img src="https://picsum.photos/seed/press9/280/200" alt="" loading="lazy"></figure>
+</body>
+</html>

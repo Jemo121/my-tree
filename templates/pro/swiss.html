@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!--
+    DOMAIN VARIANTS — change the two marked blocks to switch
+    Active: emilio.eguia.me
+  -->
+
+  <!-- emilio.eguia.me --> <title>Emilio Eguia</title>
+  <!-- eguia.me: <title>Eguia</title> -->
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+
+  <style>
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --white:   #FFFFFF;
+      --black:   #111111;
+      --grey:    #888888;
+      --light:   #F2F2F2;
+      --red:     #E8200A;
+      --col:     calc(100vw / 12);
+    }
+
+    html, body {
+      height: 100%;
+      background: var(--white);
+      color: var(--black);
+      font-family: 'Inter', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      overflow: hidden;
+    }
+
+    /* Structural grid lines — vertical only, Swiss grid soul */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      background-image: repeating-linear-gradient(
+        90deg,
+        rgba(0,0,0,0.04) 0px,
+        rgba(0,0,0,0.04) 1px,
+        transparent 1px,
+        transparent var(--col)
+      );
+      opacity: 0;
+      animation: grid-appear 1.5s ease forwards 0.3s;
+    }
+
+    @keyframes grid-appear {
+      to { opacity: 1; }
+    }
+
+    .page {
+      position: relative;
+      height: 100vh;
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      grid-template-rows: auto 1fr auto;
+      column-gap: 0;
+      padding: clamp(1.5rem, 4vw, 3rem) clamp(1.5rem, 4vw, 3rem);
+      z-index: 1;
+    }
+
+    /* Red accent bar — top left, draws in */
+    .accent-bar {
+      grid-column: 1 / 3;
+      grid-row: 1;
+      height: 3px;
+      background: var(--red);
+      width: 0;
+      animation: bar-draw 0.9s cubic-bezier(0.4, 0, 0.2, 1) forwards 0.5s;
+    }
+
+    @keyframes bar-draw {
+      to { width: 100%; }
+    }
+
+    .header {
+      grid-column: 3 / 13;
+      grid-row: 1;
+      display: flex;
+      justify-content: flex-end;
+      align-items: flex-start;
+      padding-top: 2px;
+    }
+
+    .header-label {
+      font-size: 0.62rem;
+      font-weight: 400;
+      letter-spacing: 0.08em;
+      color: var(--grey);
+      text-transform: uppercase;
+      opacity: 0;
+      animation: appear 0.5s ease forwards 1.4s;
+    }
+
+    @keyframes appear {
+      to { opacity: 1; }
+    }
+
+    .content {
+      grid-column: 1 / 9;
+      grid-row: 2;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: clamp(1rem, 1.8vw, 1.6rem);
+    }
+
+    .number {
+      font-size: 0.6rem;
+      font-weight: 400;
+      letter-spacing: 0.14em;
+      color: var(--red);
+      text-transform: uppercase;
+      opacity: 0;
+      animation: appear 0.5s ease forwards 1.6s;
+    }
+
+    h1 {
+      font-size: clamp(2.8rem, 7.5vw, 6.5rem);
+      font-weight: 300;
+      line-height: 0.95;
+      letter-spacing: -0.03em;
+      opacity: 0;
+      animation: rise 1s cubic-bezier(0.2, 0, 0, 1) forwards 1.8s;
+    }
+
+    h1 strong {
+      font-weight: 600;
+    }
+
+    @keyframes rise {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .meta {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 0.5rem 1.2rem;
+      align-items: center;
+      opacity: 0;
+      animation: appear 0.5s ease forwards 2.4s;
+    }
+
+    .meta-key {
+      font-size: 0.58rem;
+      font-weight: 400;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--grey);
+    }
+
+    .meta-val {
+      font-size: 0.68rem;
+      font-weight: 400;
+      color: var(--black);
+    }
+
+    .meta-line {
+      grid-column: 1 / -1;
+      height: 1px;
+      background: var(--light);
+    }
+
+    .cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.8rem;
+      font-size: 0.65rem;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--black);
+      text-decoration: none;
+      opacity: 0;
+      animation: appear 0.5s ease forwards 2.8s;
+      width: fit-content;
+      transition: color 0.2s;
+    }
+
+    .cta::after {
+      content: '';
+      display: block;
+      width: 2rem;
+      height: 1px;
+      background: var(--red);
+      transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .cta:hover { color: var(--red); }
+    .cta:hover::after { width: 3rem; }
+
+    .footer {
+      grid-column: 1 / -1;
+      grid-row: 3;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      opacity: 0;
+      animation: appear 0.5s ease forwards 3s;
+    }
+
+    .footer-left, .footer-right {
+      font-size: 0.55rem;
+      font-weight: 400;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--grey);
+    }
+
+    @media (max-width: 600px) {
+      .content { grid-column: 1 / -1; }
+      .header { display: none; }
+    }
+
+  /* ---- pro ---- */
+  @keyframes fade-img { from { opacity: 0 } to { opacity: 1 } }
+  .accent-img { position: fixed; bottom: clamp(2.5rem, 5vw, 4rem); right: clamp(2rem, 5vw, 4rem); width: clamp(130px, 18vw, 190px); z-index: 2; pointer-events: none; margin: 0; opacity: 0; animation: fade-img 1s ease forwards 3.5s; }
+  .accent-img img { width: 100%; display: block; filter: grayscale(0.2) contrast(1.05) brightness(0.95);
+    border: 1px solid rgba(17,17,17,0.1); }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <div class="accent-bar" aria-hidden="true"></div>
+
+    <header class="header">
+      <!-- emilio.eguia.me -->
+      <span class="header-label">emilio.eguia.me</span>
+      <!-- eguia.me:
+      <span class="header-label">eguia.me</span>
+      -->
+    </header>
+
+    <div class="content">
+      <span class="number">01 / Site in progress</span>
+
+      <!-- emilio.eguia.me -->
+      <h1>Emilio<br><strong>Eguia</strong></h1>
+      <!-- eguia.me:
+      <h1>The<br><strong>Eguia</strong><br>Family</h1>
+      -->
+
+      <div class="meta">
+        <div class="meta-line"></div>
+        <!-- emilio.eguia.me -->
+        <span class="meta-key">Status</span><span class="meta-val">Building</span>
+        <span class="meta-key">Contact</span><span class="meta-val">emiliotomillo150803@gmail.com</span>
+        <!-- eguia.me:
+        <span class="meta-key">Status</span><span class="meta-val">Coming together</span>
+        -->
+        <div class="meta-line"></div>
+      </div>
+
+      <a class="cta" href="mailto:emiliotomillo150803@gmail.com">Get in touch</a>
+    </div>
+
+    <footer class="footer">
+      <!-- emilio.eguia.me -->
+      <span class="footer-left">© 2025 Emilio Eguia</span>
+      <!-- eguia.me:
+      <span class="footer-left">© 2025 Eguia</span>
+      -->
+      <span class="footer-right">MX</span>
+    </footer>
+  </div>
+  <figure class="accent-img" aria-hidden="true"><img src="https://picsum.photos/seed/swiss9/280/200" alt="" loading="lazy"></figure>
+</body>
+</html>

@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!--
+    DOMAIN VARIANTS — change the two marked blocks to switch
+    Active: emilio.eguia.me
+  -->
+
+  <!-- emilio.eguia.me --> <title>Emilio Eguia</title>
+  <!-- eguia.me: <title>Eguia</title> -->
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+
+  <style>
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --white:    #FAFAFA;
+      --off:      #F0F0F0;
+      --charcoal: #1A1A1E;
+      --grey:     #6E6E7A;
+      --blue:     #0057FF;
+      --blue-dim: rgba(0, 87, 255, 0.07);
+    }
+
+    html, body {
+      height: 100%;
+      overflow: hidden;
+      background: var(--white);
+      color: var(--charcoal);
+      font-family: 'IBM Plex Mono', 'Courier New', monospace;
+    }
+
+    /* Blueprint grid background */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      background-image:
+        linear-gradient(var(--blue-dim) 1px, transparent 1px),
+        linear-gradient(90deg, var(--blue-dim) 1px, transparent 1px),
+        linear-gradient(rgba(0, 87, 255, 0.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 87, 255, 0.025) 1px, transparent 1px);
+      background-size: 80px 80px, 80px 80px, 16px 16px, 16px 16px;
+      opacity: 0;
+      animation: grid-in 2s ease forwards 0.1s;
+    }
+
+    @keyframes grid-in {
+      to { opacity: 1; }
+    }
+
+    /* Scan line */
+    body::after {
+      content: '';
+      position: fixed;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--blue), transparent);
+      opacity: 0;
+      z-index: 50;
+      animation: scan 3.5s cubic-bezier(0.4, 0, 0.6, 1) forwards 1s;
+    }
+
+    @keyframes scan {
+      0%   { top: 0%; opacity: 0; }
+      10%  { opacity: 0.7; }
+      90%  { opacity: 0.7; }
+      100% { top: 100%; opacity: 0; }
+    }
+
+    .page {
+      position: relative;
+      height: 100vh;
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+      grid-template-columns: 1fr 1fr;
+      padding: clamp(1.8rem, 5vw, 3.5rem);
+      z-index: 1;
+    }
+
+    /* Corner coordinates */
+    .coord {
+      font-size: 0.6rem;
+      letter-spacing: 0.12em;
+      color: var(--grey);
+      opacity: 0;
+      animation: fade-in 0.6s ease forwards;
+    }
+
+    .coord--tl { grid-column: 1; grid-row: 1; align-self: start; animation-delay: 1.8s; }
+    .coord--tr { grid-column: 2; grid-row: 1; align-self: start; justify-self: end; animation-delay: 1.9s; }
+    .coord--bl { grid-column: 1; grid-row: 3; align-self: end; animation-delay: 2.0s; }
+    .coord--br { grid-column: 2; grid-row: 3; align-self: end; justify-self: end; animation-delay: 2.1s; }
+
+    @keyframes fade-in {
+      to { opacity: 1; }
+    }
+
+    .content {
+      grid-column: 1 / -1;
+      grid-row: 2;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: clamp(1.2rem, 2vw, 1.8rem);
+      max-width: 600px;
+    }
+
+    .status-row {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      opacity: 0;
+      animation: fade-in 0.6s ease forwards 2.2s;
+    }
+
+    .status-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--blue);
+      animation: pulse-dot 2s ease-in-out infinite 2.8s;
+    }
+
+    @keyframes pulse-dot {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50%       { opacity: 0.4; transform: scale(0.7); }
+    }
+
+    .status-label {
+      font-size: 0.62rem;
+      font-weight: 400;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--blue);
+    }
+
+    h1 {
+      font-size: clamp(2.2rem, 6vw, 5rem);
+      font-weight: 300;
+      letter-spacing: -0.04em;
+      line-height: 1.06;
+      opacity: 0;
+      animation: slide-in 1s cubic-bezier(0.2, 0, 0, 1) forwards 2.4s;
+    }
+
+    h1 strong {
+      font-weight: 500;
+      color: var(--blue);
+    }
+
+    @keyframes slide-in {
+      from { opacity: 0; transform: translateX(-18px); }
+      to   { opacity: 1; transform: translateX(0); }
+    }
+
+    .divider {
+      width: 0;
+      height: 1px;
+      background: var(--charcoal);
+      opacity: 0.15;
+      animation: grow-line 1.2s cubic-bezier(0.4, 0, 0.2, 1) forwards 3s;
+    }
+
+    @keyframes grow-line {
+      from { width: 0; opacity: 0; }
+      to   { width: min(300px, 50vw); opacity: 0.15; }
+    }
+
+    .subline {
+      font-size: clamp(0.72rem, 1.2vw, 0.82rem);
+      font-weight: 300;
+      color: var(--grey);
+      letter-spacing: 0.04em;
+      line-height: 1.8;
+      opacity: 0;
+      animation: fade-in 1s ease forwards 3.2s;
+    }
+
+    .cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.7rem;
+      font-weight: 400;
+      letter-spacing: 0.1em;
+      color: var(--charcoal);
+      text-decoration: none;
+      padding: 0.5rem 1rem;
+      border: 1px solid var(--charcoal);
+      opacity: 0;
+      width: fit-content;
+      animation: fade-in 0.6s ease forwards 3.6s;
+      transition: background 0.2s ease, color 0.2s ease;
+    }
+
+    .cta::before {
+      content: '>';
+      color: var(--blue);
+    }
+
+    .cta:hover {
+      background: var(--charcoal);
+      color: var(--white);
+    }
+
+    @media (max-width: 480px) {
+      .page { padding: 1.5rem; }
+      .coord { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <span class="coord coord--tl">23.6°N 102.5°W</span>
+    <span class="coord coord--tr">REV 01</span>
+
+    <div class="content">
+      <div class="status-row">
+        <span class="status-dot" aria-hidden="true"></span>
+        <span class="status-label">In progress</span>
+      </div>
+
+      <!-- emilio.eguia.me -->
+      <h1>Emilio<br><strong>Eguia</strong></h1>
+      <!-- eguia.me:
+      <h1>The<br><strong>Eguia</strong><br>Family</h1>
+      -->
+
+      <div class="divider" aria-hidden="true"></div>
+
+      <!-- emilio.eguia.me -->
+      <p class="subline">// Site under construction.<br>// emilio.eguia.me — loading soon.</p>
+      <!-- eguia.me:
+      <p class="subline">// Coming together.<br>// eguia.me — loading soon.</p>
+      -->
+
+      <a class="cta" href="mailto:emiliotomillo150803@gmail.com">contact</a>
+    </div>
+
+    <span class="coord coord--bl">emilio.eguia.me</span>
+    <span class="coord coord--br">2025</span>
+  </div>
+</body>
+</html>
