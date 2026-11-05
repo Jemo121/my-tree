@@ -1,0 +1,78 @@
+stages:
+  - validate
+  - build
+
+variables:
+  HUGO_VERSION: "0.147.9"
+  GO_VERSION: "1.23"
+
+html-validate:
+  stage: validate
+  image: node:22-alpine
+  script:
+    - npx --yes html-validate@9 "templates/**/*.html" "errors/*.html"
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+    - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
+    - if: '$CI_COMMIT_BRANCH == "dev"'
+
+size-checker:
+  stage: validate
+  image: alpine:3.20
+  script:
+    - |
+      find templates errors -name '*.html' -exec wc -l {} + | awk -v warn=300 -v fail=400 '
+        /total$/ { next }
+        $1+0 >= fail { print "FAIL: " $2 " — " $1 " lines"; rc=1; next }
+        $1+0 >= warn { print "WARN: " $2 " — " $1 " lines" }
+        END { exit rc+0 }
+      '
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+    - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
+    - if: '$CI_COMMIT_BRANCH == "dev"'
+
+go-compat:
+  stage: validate
+  image: alpine:3.20
+  script:
+    - apk add --no-cache wget tar
+    - wget -qO /tmp/hugo.tar.gz "https://github.com/gohugoio/hugo/releases/download/v${HUGO_VERSION}/hugo_extended_${HUGO_VERSION}_linux-amd64.tar.gz"
+    - tar -xf /tmp/hugo.tar.gz -C /tmp/ hugo
+    - |
+      hugo_go=$(/tmp/hugo version | grep -oE 'go[0-9]+\.[0-9]+' | head -1 | sed 's/^go//')
+      echo "Hugo ${HUGO_VERSION} compiled with Go ${hugo_go} (required >= ${GO_VERSION})"
+      maj_got=$(echo "${hugo_go}" | cut -d. -f1)
+      min_got=$(echo "${hugo_go}" | cut -d. -f2)
+      maj_req=$(echo "${GO_VERSION}" | cut -d. -f1)
+      min_req=$(echo "${GO_VERSION}" | cut -d. -f2)
+      fail=0
+      [ "${maj_got}" -lt "${maj_req}" ] && fail=1
+      [ "${maj_got}" -eq "${maj_req}" ] && [ "${min_got}" -lt "${min_req}" ] && fail=1
+      if [ "$fail" -eq 1 ]; then
+        echo "FAIL: Hugo ${HUGO_VERSION} uses Go ${hugo_go}, below required ${GO_VERSION}"
+        exit 1
+      fi
+      echo "OK"
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+    - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
+
+# Cloudflare Pages handles deployment. This job validates the site builds without errors.
+hugo-build:
+  stage: build
+  image: alpine:3.20
+  rules:
+    - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
+      exists:
+        - hugo.toml
+  before_script:
+    - apk add --no-cache wget tar
+    - wget -qO /tmp/hugo.tar.gz "https://github.com/gohugoio/hugo/releases/download/v${HUGO_VERSION}/hugo_extended_${HUGO_VERSION}_linux-amd64.tar.gz"
+    - tar -xf /tmp/hugo.tar.gz -C /usr/local/bin/ hugo
+  script:
+    - hugo --minify --logLevel warn
+  artifacts:
+    paths:
+      - public/
+    expire_in: 1 hour
