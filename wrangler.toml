@@ -1,0 +1,12 @@
+name = "ackerman"
+compatibility_date = "2026-11-22"
+
+[vars]
+ENVIRONMENT = "production"
+
+[assets]
+directory = "public/"
+not_found_handling = "404-page"
+
+[previews.vars]
+ENVIRONMENT = "preview"
