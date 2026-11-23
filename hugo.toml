@@ -1,0 +1,9 @@
+baseURL       = "https://eguia.me"
+languageCode  = "en"
+title         = "Eguia"
+enableRobotsTXT = true
+
+[params]
+  founded     = 1348
+  description = "The Eguia family tree"
+  wasm        = "/wasm/tree.wasm"

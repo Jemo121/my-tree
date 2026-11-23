@@ -1,0 +1,20 @@
+<aside id="sign-panel" hidden aria-modal="true" role="dialog" aria-labelledby="sign-title">
+  <div id="sign-panel-inner">
+    <h2 id="sign-title">The {{ .Site.Title }} Family</h2>
+    <dl>
+      <div class="sign-row">
+        <dt>Est.</dt>
+        <dd>{{ .Site.Params.founded }}</dd>
+      </div>
+      <div class="sign-row">
+        <dt>Active</dt>
+        <dd id="sign-active">—</dd>
+      </div>
+      <div class="sign-row">
+        <dt>In the roots</dt>
+        <dd id="sign-roots">—</dd>
+      </div>
+    </dl>
+    <button type="button" id="sign-panel-close" aria-label="Close family panel">&times;</button>
+  </div>
+</aside>
