@@ -1,0 +1,24 @@
+{
+  "success": true,
+  "errors": [],
+  "messages": [],
+  "result": {
+    "id": "new789xyz",
+    "zone_id": "testzone",
+    "zone_name": "eguia.me",
+    "name": "emilio.eguia.me",
+    "type": "CNAME",
+    "content": "my-tree.pages.dev",
+    "proxiable": true,
+    "proxied": true,
+    "ttl": 1,
+    "locked": false,
+    "meta": {
+      "auto_added": false,
+      "managed_by_apps": false,
+      "managed_by_argo_tunnel": false
+    },
+    "created_on": "2026-11-23T00:00:00Z",
+    "modified_on": "2026-11-23T00:00:00Z"
+  }
+}
