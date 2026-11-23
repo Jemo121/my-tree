@@ -1,7 +1,7 @@
 loading: "Haciendo crecer el árbol familiar…"
 loading_error: "El árbol familiar no está disponible — inténtalo más tarde."
 canvas_no_support: "Tu navegador no admite Canvas. Actualiza para ver el árbol familiar."
-canvas_aria: "Árbol familiar Eguia, fundado en {{ .Founded }}"
+canvas_aria: "Árbol familiar Eguía, fundado en {{ .Founded }}"
 
 sign_title: "La familia {{ .Title }}"
 sign_founded: "Fundada en"

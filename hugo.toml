@@ -13,6 +13,7 @@ defaultContentLanguageInSubdir = false
   [languages.es]
     languageName = "Español"
     languageCode = "es"
+    title        = "Eguía"
     weight       = 2
 
 [params]
