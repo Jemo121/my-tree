@@ -1,0 +1,33 @@
+version: "2"
+
+run:
+  timeout: 5m
+  build-tags:
+    - js
+    - wasm
+
+linters:
+  default: none
+  enable:
+    - errcheck
+    - govet
+    - ineffassign
+    - staticcheck
+    - revive
+    - gosec
+    - gofmt
+    - goimports
+    - misspell
+    - unconvert
+
+issues:
+  exclude-rules:
+    # syscall/js requires unsafe pointer — expected in Go WASM
+    - linters: [gosec]
+      text: "G103|G115"
+    # WASM main() blocks with select{} — empty block is intentional
+    - path: "main\\.go"
+      linters: [revive]
+      text: "empty-block"
+  max-issues-per-linter: 0
+  max-same-issues: 0

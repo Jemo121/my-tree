@@ -5,15 +5,15 @@ stages:
   - deploy
 
 variables:
-  HUGO_VERSION: "0.147.9"
-  GO_VERSION: "1.23"
+  HUGO_VERSION: "0.170.1"
+  GO_VERSION: "1.26"
 
 # ── Security ──────────────────────────────────────────────────────────────────
 
 secrets-scan:
   stage: security
   image:
-    name: ghcr.io/gitleaks/gitleaks:v8.18.4
+    name: ghcr.io/gitleaks/gitleaks:v8.30.1
     entrypoint: [""]
   script:
     - gitleaks detect --source . --redact --exit-code 1
@@ -24,7 +24,7 @@ secrets-scan:
 
 sast:
   stage: security
-  image: semgrep/semgrep:1.72.0
+  image: semgrep/semgrep:1.186.0
   script:
     - semgrep scan --config p/ci --error .gitlab-ci.yml
   allow_failure: true
@@ -37,9 +37,9 @@ sast:
 
 html-validate:
   stage: validate
-  image: node:22-alpine
+  image: node:26-alpine
   script:
-    - npx --yes html-validate@9 "templates/**/*.html" "errors/*.html"
+    - npx --yes html-validate@11 "templates/**/*.html" "errors/*.html"
   rules:
     - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
     - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
@@ -47,10 +47,12 @@ html-validate:
 
 size-checker:
   stage: validate
-  image: alpine:3.20
+  image: alpine:3.21
   script:
     - |
-      find templates errors -name '*.html' -exec wc -l {} + | awk -v warn=300 -v fail=400 '
+      dirs=""; for d in templates errors layouts; do [ -d "$d" ] && dirs="$dirs $d"; done
+      find $dirs -name '*.html' -exec wc -l {} + | awk -v warn=300 -v fail=400 '
+        BEGIN { rc=0 }
         /total$/ { next }
         $1+0 >= fail { print "FAIL: " $2 " — " $1 " lines"; rc=1; next }
         $1+0 >= warn { print "WARN: " $2 " — " $1 " lines" }
@@ -63,14 +65,15 @@ size-checker:
 
 go-compat:
   stage: validate
-  image: alpine:3.20
+  image: alpine:3.21
   script:
     - apk add --no-cache wget tar binutils
-    - wget -qO /tmp/hugo.tar.gz "https://github.com/gohugoio/hugo/releases/download/v${HUGO_VERSION}/hugo_extended_${HUGO_VERSION}_linux-amd64.tar.gz"
+    - wget -qO /tmp/hugo.tar.gz "https://github.com/gohugoio/hugo/releases/download/v${HUGO_VERSION}/hugo_${HUGO_VERSION}_linux-amd64.tar.gz"
     - tar -xf /tmp/hugo.tar.gz -C /tmp/
     - strings /tmp/hugo > /tmp/hugo.strings
     - |
       hugo_go=$(grep -m1 '^go[0-9]' /tmp/hugo.strings | sed 's/^go//')
+      if [ -z "${hugo_go}" ]; then echo "FAIL: could not extract Go version from Hugo binary"; exit 1; fi
       echo "Hugo ${HUGO_VERSION} compiled with Go ${hugo_go} (required >= ${GO_VERSION})"
       maj_got=$(echo "${hugo_go}" | cut -d. -f1)
       min_got=$(echo "${hugo_go}" | cut -d. -f2)
@@ -88,19 +91,57 @@ go-compat:
     - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
     - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
 
+shellcheck:
+  stage: validate
+  image: koalaman/shellcheck-alpine:v0.11.0
+  script:
+    - shellcheck tests/pre-commit-hook.sh
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+    - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
+    - if: '$CI_COMMIT_BRANCH == "dev"'
+
+yamllint:
+  stage: validate
+  image: python:3.13-alpine
+  before_script:
+    - pip install --no-cache-dir --quiet yamllint==1.38.0
+  script:
+    - yamllint .
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+    - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
+    - if: '$CI_COMMIT_BRANCH == "dev"'
+
+golangci-lint:
+  stage: validate
+  image: golangci/golangci-lint:v2.15.0-alpine
+  script:
+    - cd wasm && golangci-lint run --config ../.golang.yml ./...
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+      exists:
+        - wasm/go.mod
+    - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
+      exists:
+        - wasm/go.mod
+    - if: '$CI_COMMIT_BRANCH == "dev"'
+      exists:
+        - wasm/go.mod
+
 # ── Build ─────────────────────────────────────────────────────────────────────
 
 # Cloudflare Pages handles deployment. This job validates the site builds without errors.
 hugo-build:
   stage: build
-  image: alpine:3.20
+  image: alpine:3.21
   rules:
     - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
       exists:
         - hugo.toml
   before_script:
     - apk add --no-cache wget tar
-    - wget -qO /tmp/hugo.tar.gz "https://github.com/gohugoio/hugo/releases/download/v${HUGO_VERSION}/hugo_extended_${HUGO_VERSION}_linux-amd64.tar.gz"
+    - wget -qO /tmp/hugo.tar.gz "https://github.com/gohugoio/hugo/releases/download/v${HUGO_VERSION}/hugo_${HUGO_VERSION}_linux-amd64.tar.gz"
     - tar -xf /tmp/hugo.tar.gz -C /usr/local/bin/ hugo
   script:
     - hugo --minify --logLevel warn
@@ -113,7 +154,7 @@ hugo-build:
 
 production-deploy:
   stage: deploy
-  image: alpine:3.20
+  image: alpine:3.21
   before_script:
     - apk add --no-cache curl
   script:
@@ -126,10 +167,10 @@ production-deploy:
 
 staging-deploy:
   stage: deploy
-  image: node:22-slim
+  image: node:26-slim
   before_script:
     - apt-get update -qq && apt-get install -y -qq wget tar
-    - wget -qO /tmp/hugo.tar.gz "https://github.com/gohugoio/hugo/releases/download/v${HUGO_VERSION}/hugo_extended_${HUGO_VERSION}_linux-amd64.tar.gz"
+    - wget -qO /tmp/hugo.tar.gz "https://github.com/gohugoio/hugo/releases/download/v${HUGO_VERSION}/hugo_${HUGO_VERSION}_linux-amd64.tar.gz"
     - tar -xf /tmp/hugo.tar.gz -C /usr/local/bin/ hugo
     - hugo --gc --minify --logLevel warn
   script:
@@ -144,10 +185,10 @@ staging-deploy:
 
 subdomain-sync:
   stage: deploy
-  image: alpine:3.20
+  image: alpine:3.21
   before_script:
     - apk add --no-cache curl jq wget
-    - wget -qO /usr/local/bin/yq https://github.com/mikefarah/yq/releases/download/v4.44.3/yq_linux_amd64
+    - wget -qO /usr/local/bin/yq https://github.com/mikefarah/yq/releases/download/v4.54.3/yq_linux_amd64
     - chmod +x /usr/local/bin/yq
   script:
     - |
