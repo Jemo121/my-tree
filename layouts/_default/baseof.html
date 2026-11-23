@@ -1,9 +1,10 @@
 <!DOCTYPE html>
-<html lang="{{ .Site.LanguageCode }}">
+<html lang="{{ .Site.Language.Lang }}">
   <head>
     {{- partial "head.html" . -}}
   </head>
-  <body>
+  <body data-lang="{{ .Site.Language.Lang }}">
+    {{- partial "lang-switch.html" . -}}
     {{- block "main" . }}{{- end }}
     <div id="lightning-flash" aria-hidden="true"></div>
   </body>

@@ -1,13 +1,13 @@
 <div id="tree-loading" aria-live="polite">
   <span class="loading-ring" aria-hidden="true"></span>
-  <p>Growing the family tree&hellip;</p>
+  <p>{{ i18n "loading" }}</p>
 </div>
 
 <canvas id="tree-canvas"
   width="800"
   height="600"
-  aria-label="Eguia family tree, est. {{ .Site.Params.founded }}">
-  <p>Your browser does not support Canvas. Please upgrade to view the family tree.</p>
+  aria-label="{{ i18n "canvas_aria" (dict "Founded" .Site.Params.founded) }}">
+  <p>{{ i18n "canvas_no_support" }}</p>
 </canvas>
 
 <div id="member-overlays" aria-hidden="true"></div>
@@ -23,7 +23,7 @@
       go.run(r.instance);
     }).catch(function () {
       var el = document.getElementById("tree-loading");
-      if (el) { el.textContent = "Family tree unavailable — please try again later."; }
+      if (el) { el.textContent = {{ i18n "loading_error" | jsonify }}; }
     });
   }());
 </script>

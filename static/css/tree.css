@@ -231,6 +231,27 @@ html, body {
 
 .roots-back:hover { background: rgba(200, 168, 122, 0.1); }
 
+/* ── Language switcher ───────────────────────────────────────────────────── */
+.lang-switch {
+  position: fixed;
+  top: 0.75rem;
+  right: 1rem;
+  z-index: 20;
+}
+
+.lang-switch a {
+  color: var(--panel-text);
+  text-decoration: none;
+  font-size: 0.75rem;
+  opacity: 0.6;
+  letter-spacing: 0.05em;
+  padding: 0.2rem 0.5rem;
+  border: 1px solid currentColor;
+  border-radius: 2px;
+}
+
+.lang-switch a:hover { opacity: 1; }
+
 /* ── Responsive ─────────────────────────────────────────────────────────── */
 @media (max-width: 480px) {
   #sign-panel-inner { padding: 1.5rem; }

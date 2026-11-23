@@ -1,0 +1,24 @@
+loading: "Haciendo crecer el árbol familiar…"
+loading_error: "El árbol familiar no está disponible — inténtalo más tarde."
+canvas_no_support: "Tu navegador no admite Canvas. Actualiza para ver el árbol familiar."
+canvas_aria: "Árbol familiar Eguia, fundado en {{ .Founded }}"
+
+sign_title: "La familia {{ .Title }}"
+sign_founded: "Fundada en"
+sign_active: "Activos"
+sign_roots: "En las raíces"
+sign_close: "Cerrar panel familiar"
+sign_aria: "Información familiar"
+
+page_not_found: "Página no encontrada"
+page_not_found_desc: "Esta rama del árbol no existe aquí."
+page_not_found_back: "Volver al árbol familiar"
+
+roots_title: "Raíces privadas"
+roots_desc: "Este miembro de la familia mantiene su rama del árbol en privado."
+roots_back: "Volver al árbol familiar"
+
+member_visit: "Visitar la página de {{ .Name }}"
+member_private: "{{ .Name }} — perfil privado"
+
+lang_switch: "English"

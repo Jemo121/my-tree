@@ -1,7 +1,19 @@
 baseURL       = "https://eguia.me"
-languageCode  = "en"
 title         = "Eguia"
 enableRobotsTXT = true
+
+defaultContentLanguage        = "en"
+defaultContentLanguageInSubdir = false
+
+[languages]
+  [languages.en]
+    languageName = "English"
+    languageCode = "en"
+    weight       = 1
+  [languages.es]
+    languageName = "Español"
+    languageCode = "es"
+    weight       = 2
 
 [params]
   founded     = 1348
