@@ -15,10 +15,13 @@ linters:
     - staticcheck
     - revive
     - gosec
-    - gofmt
-    - goimports
     - misspell
     - unconvert
+
+formatters:
+  enable:
+    - gofmt
+    - goimports
 
 issues:
   exclude-rules:
