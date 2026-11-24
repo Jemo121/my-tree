@@ -214,7 +214,7 @@ staging-deploy:
     - wget -qO static/wasm_exec.js "https://raw.githubusercontent.com/golang/go/go${WASM_GO_VERSION}/lib/wasm/wasm_exec.js"
     - hugo --gc --minify --logLevel warn
   script:
-    - npx --yes wrangler@4 preview --name "staging"
+    - npx --yes wrangler@4 preview --name "dev"
   rules:
     - if: '$CI_COMMIT_BRANCH == "dev"'
       exists:
