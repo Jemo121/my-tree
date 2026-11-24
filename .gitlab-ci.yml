@@ -121,6 +121,9 @@ yamllint:
 golangci-lint:
   stage: validate
   image: golangci/golangci-lint:v2.15.0-alpine
+  variables:
+    GOOS: js
+    GOARCH: wasm
   script:
     - cd wasm && golangci-lint run --config ../.golang.yml ./...
   rules:
