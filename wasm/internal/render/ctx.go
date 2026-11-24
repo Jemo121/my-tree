@@ -43,8 +43,8 @@ func (c *Ctx) Resize() {
 func (c *Ctx) Save()    { c.v.Call("save") }
 func (c *Ctx) Restore() { c.v.Call("restore") }
 
-func (c *Ctx) ClearRect(x, y, w, h float64) { c.v.Call("clearRect", x, y, w, h) }
-func (c *Ctx) FillRect(x, y, w, h float64)  { c.v.Call("fillRect", x, y, w, h) }
+func (c *Ctx) ClearRect(x, y, w, h float64)  { c.v.Call("clearRect", x, y, w, h) }
+func (c *Ctx) FillRect(x, y, w, h float64)   { c.v.Call("fillRect", x, y, w, h) }
 func (c *Ctx) StrokeRect(x, y, w, h float64) { c.v.Call("strokeRect", x, y, w, h) }
 
 func (c *Ctx) BeginPath() { c.v.Call("beginPath") }
@@ -52,9 +52,9 @@ func (c *Ctx) ClosePath() { c.v.Call("closePath") }
 func (c *Ctx) Fill()      { c.v.Call("fill") }
 func (c *Ctx) Stroke()    { c.v.Call("stroke") }
 
-func (c *Ctx) MoveTo(x, y float64)        { c.v.Call("moveTo", x, y) }
-func (c *Ctx) LineTo(x, y float64)        { c.v.Call("lineTo", x, y) }
-func (c *Ctx) Arc(x, y, r, sa, ea float64) { c.v.Call("arc", x, y, r, sa, ea) }
+func (c *Ctx) MoveTo(x, y float64)            { c.v.Call("moveTo", x, y) }
+func (c *Ctx) LineTo(x, y float64)            { c.v.Call("lineTo", x, y) }
+func (c *Ctx) Arc(x, y, r, sa, ea float64)    { c.v.Call("arc", x, y, r, sa, ea) }
 func (c *Ctx) ArcCCW(x, y, r, sa, ea float64) { c.v.Call("arc", x, y, r, sa, ea, true) }
 
 func (c *Ctx) QuadraticCurveTo(cpx, cpy, x, y float64) {
@@ -69,15 +69,15 @@ func (c *Ctx) Translate(x, y float64) { c.v.Call("translate", x, y) }
 func (c *Ctx) Rotate(angle float64)   { c.v.Call("rotate", angle) }
 func (c *Ctx) Scale(x, y float64)     { c.v.Call("scale", x, y) }
 
-func (c *Ctx) SetFill(color string)       { c.v.Set("fillStyle", color) }
-func (c *Ctx) SetStroke(color string)     { c.v.Set("strokeStyle", color) }
-func (c *Ctx) SetLineWidth(w float64)     { c.v.Set("lineWidth", w) }
-func (c *Ctx) SetAlpha(a float64)         { c.v.Set("globalAlpha", a) }
-func (c *Ctx) SetLineCap(cap string)      { c.v.Set("lineCap", cap) }
-func (c *Ctx) SetFont(font string)        { c.v.Set("font", font) }
-func (c *Ctx) SetTextAlign(align string)  { c.v.Set("textAlign", align) }
-func (c *Ctx) SetTextBaseline(b string)   { c.v.Set("textBaseline", b) }
-func (c *Ctx) SetComposite(op string)     { c.v.Set("globalCompositeOperation", op) }
+func (c *Ctx) SetFill(color string)      { c.v.Set("fillStyle", color) }
+func (c *Ctx) SetStroke(color string)    { c.v.Set("strokeStyle", color) }
+func (c *Ctx) SetLineWidth(w float64)    { c.v.Set("lineWidth", w) }
+func (c *Ctx) SetAlpha(a float64)        { c.v.Set("globalAlpha", a) }
+func (c *Ctx) SetLineCap(cap string)     { c.v.Set("lineCap", cap) }
+func (c *Ctx) SetFont(font string)       { c.v.Set("font", font) }
+func (c *Ctx) SetTextAlign(align string) { c.v.Set("textAlign", align) }
+func (c *Ctx) SetTextBaseline(b string)  { c.v.Set("textBaseline", b) }
+func (c *Ctx) SetComposite(op string)    { c.v.Set("globalCompositeOperation", op) }
 func (c *Ctx) SetShadow(blur float64, color string) {
 	c.v.Set("shadowBlur", blur)
 	c.v.Set("shadowColor", color)
