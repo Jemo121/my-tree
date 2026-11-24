@@ -2,7 +2,7 @@
 # Mirrors the CI validate stage so local runs catch the same issues.
 
 .PHONY: test test-unit test-schema test-html test-pii test-access test-images \
-        install-hooks uninstall-hooks copy-wasm-exec wasm sync-members help
+        install-hooks uninstall-hooks copy-wasm-exec wasm wasm-build sync-members help
 
 BATS     ?= bats
 REPO_ROOT := $(shell git rev-parse --show-toplevel)
@@ -70,6 +70,12 @@ wasm: sync-members
 	@echo "==> wasm"
 	cd wasm && GOOS=js GOARCH=wasm go build -ldflags="-s -w" -o ../static/wasm/tree.wasm .
 	@ls -lh static/wasm/tree.wasm
+
+## Build WASM binary locally (requires Go 1.27+, yq v4) — mirrors CI wasm-build job
+wasm-build:
+	@echo "==> wasm-build"
+	yq -o=json eval '.' data/family/members.yaml > wasm/assets/members.json
+	GOOS=js GOARCH=wasm go build -ldflags="-s -w" -o static/wasm/tree.wasm ./wasm/
 
 help:
 	@grep -E '^##' Makefile | sed 's/^## //'
