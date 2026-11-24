@@ -9,7 +9,26 @@ import (
 	"eguia.me/wasm/internal/domain"
 )
 
+// SignSwinger tracks a simple rotation oscillation on sign click (~600 ms decay).
+type SignSwinger struct {
+	Angle float64 // current rotation in radians
+	vel   float64 // angular velocity
+}
+
+const signSwingDecay = 0.88
+
+// Trigger starts a swing with an initial kick.
+func (s *SignSwinger) Trigger() { s.vel = 0.18 }
+
+// Tick advances the swing physics (call each frame).
+func (s *SignSwinger) Tick() {
+	s.vel *= signSwingDecay
+	s.Angle += s.vel
+	s.Angle *= signSwingDecay
+}
+
 // DrawSign renders the wooden sign element on the canvas.
+// swinger may be nil (no swing applied).
 func DrawSign(ctx *Ctx, layout *domain.TreeLayout) {
 	sb := layout.SignBounds
 	w := sb.Max.X - sb.Min.X

@@ -27,6 +27,7 @@ func main() {
 	treeLayout := layout.Build(members, ctx.W, ctx.H)
 	weather := domain.NewWeatherState()
 	shakes := &render.ShakeSystem{}
+	signSwing := &render.SignSwinger{}
 	events := input.Register("tree-canvas")
 	overlays := input.NewOverlayManager("tree-canvas")
 
@@ -62,6 +63,7 @@ func main() {
 
 		weather.Tick(dt)
 		shakes.Tick()
+		signSwing.Tick()
 		render.SpawnRainDrops(weather, ctx.W, ctx.H)
 		if len(weather.CloudPuffs) == 0 {
 			render.UpdateCloudPuffs(weather, ctx.W, ctx.H)
@@ -77,7 +79,7 @@ func main() {
 
 		grid := input.Build(treeLayout, weather)
 		for _, click := range events.Clicks {
-			handleClick(click, grid, treeLayout, weather, shakes, signCfg)
+			handleClick(click, grid, treeLayout, weather, shakes, signSwing, signCfg)
 		}
 
 		dx, dy := shakes.Offset()
@@ -132,6 +134,7 @@ func handleClick(
 	treeLayout *domain.TreeLayout,
 	weather *domain.WeatherState,
 	shakes *render.ShakeSystem,
+	signSwing *render.SignSwinger,
 	signCfg assets.SignConfig,
 ) {
 	target := grid.Query(click)
@@ -149,6 +152,7 @@ func handleClick(
 	case domain.ActionSplashCloud, domain.ActionVanishCloud:
 		render.VanishCloud(weather, target.CloudIdx)
 	case domain.ActionShowSign:
+		signSwing.Trigger()
 		render.UpdateSignPanel(treeLayout, signCfg)
 		render.ShowSignPanel()
 	}

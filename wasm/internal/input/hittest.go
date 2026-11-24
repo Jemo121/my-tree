@@ -1,8 +1,16 @@
 package input
 
 import (
+	"eguia.me/wasm/internal/config"
 	"eguia.me/wasm/internal/domain"
 )
+
+// HitSign returns true if (x, y) falls within the wooden sign bounds.
+// signX, signY are the sign's top-left corner coordinates.
+func HitSign(x, y, signX, signY float64) bool {
+	return x >= signX && x <= signX+config.SignWidth &&
+		y >= signY && y <= signY+config.SignHeight
+}
 
 const gridCell = 50.0
 

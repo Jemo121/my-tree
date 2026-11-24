@@ -22,9 +22,16 @@ const (
 	GlyphRadiusActive = 20.0
 	GlyphPadding      = 8.0
 
-	// Sign
+	// Sign fractions (used by layout algorithm)
 	SignWidthFrac  = 0.12
 	SignHeightFrac = 0.08
+
+	// Sign absolute offsets for hit detection (pixels, relative to tree trunk centre)
+	// Negative SignOffsetX places the sign to the left of the trunk.
+	SignOffsetX = -220.0
+	SignOffsetY = 40.0
+	SignWidth   = 200.0
+	SignHeight  = 70.0
 
 	// Weather particles
 	MaxRainDrops  = 300
