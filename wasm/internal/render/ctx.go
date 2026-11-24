@@ -111,7 +111,7 @@ func (c *Ctx) SetLineWidth(w float64) { c.v.Set("lineWidth", w) }
 func (c *Ctx) SetAlpha(a float64) { c.v.Set("globalAlpha", a) }
 
 // SetLineCap sets the shape of line endpoints ("butt", "round", or "square").
-func (c *Ctx) SetLineCap(cap string) { c.v.Set("lineCap", cap) }
+func (c *Ctx) SetLineCap(style string) { c.v.Set("lineCap", style) }
 
 // SetFont sets the font for text operations (CSS font string).
 func (c *Ctx) SetFont(font string) { c.v.Set("font", font) }
