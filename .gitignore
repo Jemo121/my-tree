@@ -3,6 +3,9 @@
 /resources/_gen/
 /.hugo_build.lock
 
+# WASM build output
+/static/wasm/tree.wasm
+
 # OS
 .DS_Store
 Thumbs.db

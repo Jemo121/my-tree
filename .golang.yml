@@ -17,6 +17,11 @@ linters:
     - gosec
     - misspell
     - unconvert
+  settings:
+    gosec:
+      excludes:
+        - G103  # syscall/js requires unsafe pointer — expected in Go WASM
+        - G404  # math/rand is correct for visual effects; fires at import, not call sites
 
 formatters:
   enable:
@@ -25,9 +30,6 @@ formatters:
 
 issues:
   exclude-rules:
-    # syscall/js requires unsafe pointer — expected in Go WASM
-    - linters: [gosec]
-      text: "G103|G115"
     # WASM main() blocks with select{} — empty block is intentional
     - path: "main\\.go"
       linters: [revive]
