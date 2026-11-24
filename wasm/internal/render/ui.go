@@ -5,6 +5,7 @@ package render
 import (
 	"syscall/js"
 
+	"eguia.me/wasm/assets"
 	"eguia.me/wasm/internal/domain"
 )
 
@@ -46,8 +47,9 @@ func DrawSign(ctx *Ctx, layout *domain.TreeLayout) {
 	_ = w
 }
 
-// UpdateSignPanel pushes the current member counts into the DOM panel.
-func UpdateSignPanel(layout *domain.TreeLayout) {
+// UpdateSignPanel pushes the current member counts and i18n labels into the DOM panel.
+// cfg holds localised strings sourced from Hugo data attributes.
+func UpdateSignPanel(layout *domain.TreeLayout, cfg assets.SignConfig) {
 	doc := js.Global().Get("document")
 	el := doc.Call("getElementById", "sign-active")
 	if !el.IsNull() {
@@ -56,6 +58,15 @@ func UpdateSignPanel(layout *domain.TreeLayout) {
 	el = doc.Call("getElementById", "sign-roots")
 	if !el.IsNull() {
 		el.Set("textContent", js.ValueOf(layout.InactCount))
+	}
+	// Push localised labels into the panel so the DOM template can reference them.
+	el = doc.Call("getElementById", "sign-label-active")
+	if !el.IsNull() {
+		el.Set("textContent", cfg.LabelActive)
+	}
+	el = doc.Call("getElementById", "sign-label-roots")
+	if !el.IsNull() {
+		el.Set("textContent", cfg.LabelRoots)
 	}
 }
 
