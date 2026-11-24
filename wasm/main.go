@@ -22,7 +22,7 @@ func main() {
 		return
 	}
 
-	ctx := render.NewCtx("tree-canvas")
+	ctx := render.NewCtx("family-tree")
 	ctx.Resize()
 
 	treeLayout := layout.Build(members, ctx.W, ctx.H)
@@ -30,7 +30,7 @@ func main() {
 	shakes := &render.ShakeSystem{}
 	signSwing := &render.SignSwinger{}
 	particles := &render.ParticleSystem{}
-	events := input.Register("tree-canvas")
+	events := input.Register("family-tree")
 	overlays := input.NewOverlayManager("tree-canvas")
 
 	signCfg := assets.LoadSignConfig()
