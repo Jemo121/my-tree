@@ -7,14 +7,14 @@ defaultContentLanguageInSubdir = false
 
 [languages]
   [languages.en]
-    languageName = "English"
-    languageCode = "en"
-    weight       = 1
+    label  = "English"
+    locale = "en"
+    weight = 1
   [languages.es]
-    languageName = "Español"
-    languageCode = "es"
-    title        = "Eguía"
-    weight       = 2
+    label  = "Español"
+    locale = "es"
+    title  = "Eguía"
+    weight = 2
 
 [params]
   family_name = "Eguia"
