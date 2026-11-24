@@ -7,6 +7,7 @@ import "eguia.me/wasm/internal/domain"
 // ShakeKind is the type of shake to apply.
 type ShakeKind int
 
+// ShakeKind values.
 const (
 	ShakeTrunk ShakeKind = iota
 	ShakeLocal

@@ -3,6 +3,7 @@ package domain
 // HitTargetType classifies what was hit by a click/tap.
 type HitTargetType int
 
+// HitTargetType values.
 const (
 	HitNone HitTargetType = iota
 	HitActiveMember
@@ -26,6 +27,7 @@ type HitTarget struct {
 // ClickAction is what should happen when a hit target is activated.
 type ClickAction int
 
+// ClickAction values.
 const (
 	ActionNone ClickAction = iota
 	ActionNavigateMember

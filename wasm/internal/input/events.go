@@ -1,5 +1,6 @@
 //go:build js && wasm
 
+// Package input binds canvas pointer events and resolves hit targets.
 package input
 
 import (

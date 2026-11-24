@@ -1,3 +1,4 @@
+// Package layout computes branch positions from family member data.
 package layout
 
 import (

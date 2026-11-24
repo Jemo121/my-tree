@@ -1,8 +1,10 @@
+// Package domain defines the core types for the family tree scene: members, animals, weather, and time.
 package domain
 
 // AnimalType identifies the kind of animal.
 type AnimalType int
 
+// AnimalType values.
 const (
 	AnimalBird      AnimalType = iota
 	AnimalSquirrel             // tree-bound, year-round
@@ -13,7 +15,7 @@ const (
 	AnimalSnowFox              // rare ground appearance, winter only (white coat)
 )
 
-// Spawn probability constants (per tick).
+// SpawnProb constants (per tick).
 const (
 	SpawnProbButterfly = 0.002  // per tick
 	SpawnProbFirefly   = 0.003  // per tick, night only
@@ -33,6 +35,7 @@ func CanSpawnSnowFox(season Season) bool { return season == SeasonWinter }
 // AnimalState is the current behaviour mode of an animal.
 type AnimalState int
 
+// AnimalState values.
 const (
 	AnimalIdle AnimalState = iota
 	AnimalMoving

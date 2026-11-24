@@ -1,5 +1,6 @@
 //go:build js && wasm
 
+// Package main is the entry point for the eguia.me family tree Go WASM module.
 package main
 
 import (

@@ -1,5 +1,6 @@
 //go:build js && wasm
 
+// Package render draws the canvas scene: tree, background, weather, animals, and UI.
 package render
 
 import (

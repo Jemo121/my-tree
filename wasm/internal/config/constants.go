@@ -1,7 +1,9 @@
+// Package config holds compile-time constants and tuning parameters for the renderer.
 package config
 
 import "math"
 
+// Rendering and layout constants.
 const (
 	TargetFPS = 60
 	FrameMS   = 1000.0 / TargetFPS

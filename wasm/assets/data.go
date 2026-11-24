@@ -1,5 +1,6 @@
 //go:build js && wasm
 
+// Package assets embeds compiled member data and provides the sign configuration loader.
 package assets
 
 import (

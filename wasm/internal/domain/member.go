@@ -3,6 +3,7 @@ package domain
 // MemberStatus represents a family member's presence on the tree.
 type MemberStatus string
 
+// MemberStatus values.
 const (
 	StatusActive   MemberStatus = "active"
 	StatusInactive MemberStatus = "inactive"
@@ -11,6 +12,7 @@ const (
 // MemberIcon determines which glyph represents the member in the crown.
 type MemberIcon string
 
+// MemberIcon values.
 const (
 	IconLeaf   MemberIcon = "leaf"
 	IconFruit  MemberIcon = "fruit"

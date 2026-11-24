@@ -8,6 +8,7 @@ import (
 // Season represents a calendar season.
 type Season int
 
+// Season values.
 const (
 	SeasonSpring Season = iota
 	SeasonSummer
@@ -32,6 +33,7 @@ func SeasonFromTime(t time.Time) Season {
 // TimeOfDay represents a part of the day.
 type TimeOfDay int
 
+// TimeOfDay values.
 const (
 	TimeDawn TimeOfDay = iota
 	TimeDay
@@ -57,6 +59,7 @@ func TimeOfDayFromTime(t time.Time) TimeOfDay {
 // WeatherType is a weather state.
 type WeatherType int
 
+// WeatherType values.
 const (
 	WeatherSunny WeatherType = iota
 	WeatherCloudy
@@ -67,6 +70,7 @@ const (
 // WeatherIntensity is the strength of a weather state.
 type WeatherIntensity int
 
+// WeatherIntensity values.
 const (
 	IntensityLow WeatherIntensity = iota
 	IntensityMedium
