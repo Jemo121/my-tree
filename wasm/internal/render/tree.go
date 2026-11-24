@@ -272,7 +272,7 @@ func drawTwigGlyph(ctx *Ctx, r float64, color string) {
 	ctx.LineTo(-r*0.55, -r*0.45)
 	ctx.Stroke()
 	// tiny buds at branch tips
-	ctx.SetFill(cs_flowerFallback)
+	ctx.SetFill(csFlowerFallback)
 	ctx.BeginPath()
 	ctx.Arc(r*0.6, -r*0.75, 3, 0, math.Pi*2)
 	ctx.Fill()
@@ -281,5 +281,5 @@ func drawTwigGlyph(ctx *Ctx, r float64, color string) {
 	ctx.Fill()
 }
 
-// cs_flowerFallback is used when ColorSet is not in scope for tiny bud accents.
-const cs_flowerFallback = "#f48fb1"
+// csFlowerFallback is used when ColorSet is not in scope for tiny bud accents.
+const csFlowerFallback = "#f48fb1"

@@ -10,10 +10,10 @@ import (
 
 // EventState accumulates input events between frames.
 type EventState struct {
-	Clicks   []domain.Vec2
-	PanDelta domain.Vec2
+	Clicks    []domain.Vec2
+	PanDelta  domain.Vec2
 	ZoomDelta float64
-	Resized  bool
+	Resized   bool
 
 	// pan/zoom internals
 	lastTouch  domain.Vec2
@@ -24,7 +24,7 @@ type EventState struct {
 // ViewTransform tracks pan and zoom applied to the canvas draw context.
 type ViewTransform struct {
 	PanX, PanY float64
-	Zoom        float64
+	Zoom       float64
 }
 
 // NewViewTransform returns the identity transform.

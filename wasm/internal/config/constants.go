@@ -3,14 +3,14 @@ package config
 import "math"
 
 const (
-	TargetFPS    = 60
-	FrameMS      = 1000.0 / TargetFPS
-	TwoPi        = math.Pi * 2
+	TargetFPS = 60
+	FrameMS   = 1000.0 / TargetFPS
+	TwoPi     = math.Pi * 2
 
 	// Canvas layout proportions (fraction of canvas height)
-	GroundFrac   = 0.72 // Y position of ground line
-	CrownFrac    = 0.20 // Crown top starts here
-	RootFrac     = 0.88 // Root zone ends here
+	GroundFrac = 0.72 // Y position of ground line
+	CrownFrac  = 0.20 // Crown top starts here
+	RootFrac   = 0.88 // Root zone ends here
 
 	// Tree trunk
 	TrunkBaseWidth  = 0.04 // fraction of canvas width

@@ -131,12 +131,12 @@ var weatherBaseDurations = map[WeatherType]float64{
 }
 
 const (
-	weatherMean     = 450.0
-	weatherK        = 0.3
-	weatherMinDur   = 300.0
-	weatherMaxDur   = 1800.0
-	thunderMinSec   = 30.0
-	thunderMaxSec   = 120.0
+	weatherMean   = 450.0
+	weatherK      = 0.3
+	weatherMinDur = 300.0
+	weatherMaxDur = 1800.0
+	thunderMinSec = 30.0
+	thunderMaxSec = 120.0
 )
 
 // NewWeatherState creates a sunny low-intensity initial state.

@@ -39,7 +39,7 @@ func DrawWeather(ctx *Ctx, weather *domain.WeatherState, cs config.ColorSet) {
 	}
 }
 
-func drawRain(ctx *Ctx, w *domain.WeatherState, cs config.ColorSet) {
+func drawRain(ctx *Ctx, w *domain.WeatherState, _ config.ColorSet) {
 	intensity := 0.4 + float64(w.Intensity)*0.2
 	ctx.SetAlpha(intensity)
 	ctx.SetStroke("rgba(174, 214, 241, 0.75)")

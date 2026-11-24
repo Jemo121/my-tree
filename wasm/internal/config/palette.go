@@ -4,14 +4,14 @@ import "eguia.me/wasm/internal/domain"
 
 // ColorSet holds all colors needed for one (season, time, weather) combination.
 type ColorSet struct {
-	SkyTop, SkyBottom string
-	Ground, Grass     string
-	TrunkDark, TrunkLight string
-	LeafPri, LeafSec  string
+	SkyTop, SkyBottom            string
+	Ground, Grass                string
+	TrunkDark, TrunkLight        string
+	LeafPri, LeafSec             string
 	FruitCol, FlowerCol, TwigCol string
-	RootCol, RockCol  string
-	Accent, MoonSun   string
-	FogAlpha          float64
+	RootCol, RockCol             string
+	Accent, MoonSun              string
+	FogAlpha                     float64
 }
 
 // shared dusk / night palettes reused across seasons

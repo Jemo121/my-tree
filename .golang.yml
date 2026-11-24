@@ -28,9 +28,20 @@ issues:
     # syscall/js requires unsafe pointer — expected in Go WASM
     - linters: [gosec]
       text: "G103|G115"
+    # math/rand is correct for visual effects — no cryptographic context
+    - linters: [gosec]
+      text: "G404"
     # WASM main() blocks with select{} — empty block is intentional
     - path: "main\\.go"
       linters: [revive]
       text: "empty-block"
+    # Canvas 2D wrapper — method names are 1:1 with the browser API
+    - path: "internal/render/ctx\\.go"
+      linters: [revive]
+      text: "exported"
+    # Internal packages have no public API consumers
+    - path: "(internal/|assets/)"
+      linters: [revive]
+      text: "package-comments|exported"
   max-issues-per-linter: 0
   max-same-issues: 0

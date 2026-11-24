@@ -89,7 +89,7 @@ func drawStars(ctx *Ctx, cw, skyH float64) {
 	ctx.SetAlpha(1)
 }
 
-func drawClouds(ctx *Ctx, layout *domain.TreeLayout, weather *domain.WeatherState, cs config.ColorSet) {
+func drawClouds(ctx *Ctx, _ *domain.TreeLayout, weather *domain.WeatherState, cs config.ColorSet) {
 	cw := ctx.W
 	cloudAlpha := weather.CloudCover * 0.75
 	for i, puff := range weather.CloudPuffs {

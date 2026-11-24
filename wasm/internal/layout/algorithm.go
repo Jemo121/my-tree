@@ -80,10 +80,10 @@ func Build(members []*domain.Member, cw, ch float64) *domain.TreeLayout {
 func crownSize(n int, cw, ch float64) float64 {
 	base := ch * 0.22
 	growth := math.Log(float64(n+2)) * ch * 0.06
-	max := cw * 0.42
+	maxR := cw * 0.42
 	r := base + growth
-	if r > max {
-		r = max
+	if r > maxR {
+		r = maxR
 	}
 	return r
 }
@@ -92,10 +92,10 @@ func crownSize(n int, cw, ch float64) float64 {
 func rootSize(n int, cw, ch float64) float64 {
 	base := ch * 0.10
 	growth := math.Log(float64(n+2)) * ch * 0.03
-	max := cw * 0.28
+	maxR := cw * 0.28
 	r := base + growth
-	if r > max {
-		r = max
+	if r > maxR {
+		r = maxR
 	}
 	return r
 }
