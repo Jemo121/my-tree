@@ -118,7 +118,7 @@ yamllint:
     - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
     - if: '$CI_COMMIT_BRANCH == "dev"'
 
-golangci-lint:
+golang-lint:
   stage: validate
   image: golangci/golangci-lint:v2.15.0-alpine
   variables:
