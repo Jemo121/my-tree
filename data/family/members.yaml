@@ -1,3 +1,5 @@
+# status values: active | roots
+# active = current family member; roots = historical/deceased ancestor
 - name: Emilio Eguia
   subdomain: emilio
   template: sharp

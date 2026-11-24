@@ -3,10 +3,15 @@
   <p>{{ i18n "loading" }}</p>
 </div>
 
-<canvas id="tree-canvas"
+<canvas id="family-tree"
   width="800"
   height="600"
-  aria-label="{{ i18n "canvas_aria" (dict "Founded" .Site.Params.founded) }}">
+  aria-label="{{ i18n "canvas_aria" (dict "Founded" .Site.Params.established) }}"
+  data-family-name="{{ i18n "family_name" }}"
+  data-established="{{ .Site.Params.established }}"
+  data-sign-active="{{ i18n "sign_active" }}"
+  data-sign-roots="{{ i18n "sign_roots" }}"
+  data-sign-est="{{ i18n "sign_est" }}">
   <p>{{ i18n "canvas_no_support" }}</p>
 </canvas>
 

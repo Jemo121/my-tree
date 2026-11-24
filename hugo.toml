@@ -17,6 +17,7 @@ defaultContentLanguageInSubdir = false
     weight       = 2
 
 [params]
-  founded     = 1348
+  family_name = "Eguia"
+  established = "1348"
   description = "The Eguia family tree"
   wasm        = "/wasm/tree.wasm"
