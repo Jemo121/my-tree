@@ -1,0 +1,23 @@
+baseURL       = "https://eguia.me"
+title         = "Eguia"
+enableRobotsTXT = true
+
+defaultContentLanguage        = "en"
+defaultContentLanguageInSubdir = false
+
+[languages]
+  [languages.en]
+    languageName = "English"
+    languageCode = "en"
+    weight       = 1
+  [languages.es]
+    languageName = "Español"
+    languageCode = "es"
+    title        = "Eguía"
+    weight       = 2
+
+[params]
+  family_name = "Eguia"
+  established = "1348"
+  description = "The Eguia family tree"
+  wasm        = "/wasm/tree.wasm"

@@ -1,0 +1,34 @@
+<div id="tree-loading" aria-live="polite">
+  <span class="loading-ring" aria-hidden="true"></span>
+  <p>{{ i18n "loading" }}</p>
+</div>
+
+<canvas id="family-tree"
+  width="800"
+  height="600"
+  aria-label="{{ i18n "canvas_aria" (dict "Founded" .Site.Params.established) }}"
+  data-family-name="{{ i18n "family_name" }}"
+  data-established="{{ .Site.Params.established }}"
+  data-sign-active="{{ i18n "sign_active" }}"
+  data-sign-roots="{{ i18n "sign_roots" }}"
+  data-sign-est="{{ i18n "sign_est" }}">
+  <p>{{ i18n "canvas_no_support" }}</p>
+</canvas>
+
+<div id="member-overlays" aria-hidden="true"></div>
+
+<script src="/wasm_exec.js"></script>
+<script>
+  (function () {
+    var go = new Go();
+    WebAssembly.instantiateStreaming(
+      fetch("{{ .Site.Params.wasm }}"),
+      go.importObject
+    ).then(function (r) {
+      go.run(r.instance);
+    }).catch(function () {
+      var el = document.getElementById("tree-loading");
+      if (el) { el.textContent = {{ i18n "loading_error" | jsonify }}; }
+    });
+  }());
+</script>

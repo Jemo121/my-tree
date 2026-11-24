@@ -1,0 +1,25 @@
+loading: "Growing the family tree…"
+loading_error: "Family tree unavailable — please try again later."
+canvas_no_support: "Your browser does not support Canvas. Please upgrade to view the family tree."
+canvas_aria: "Eguia family tree, est. {{ .Founded }}"
+family_name: "Eguia"
+
+sign_title: "The {{ .Title }} Family"
+sign_active: "active members"
+sign_roots: "in roots"
+sign_est: "Est."
+sign_close: "Close family panel"
+sign_aria: "Family information"
+
+page_not_found: "Page not found"
+page_not_found_desc: "This branch of the tree does not exist here."
+page_not_found_back: "Return to the family tree"
+
+roots_title: "Private roots"
+roots_desc: "This family member keeps their branch of the tree private."
+roots_back: "Return to the family tree"
+
+member_visit: "Visit {{ .Name }}’s page"
+member_private: "{{ .Name }} — private profile"
+
+lang_switch: "Español"

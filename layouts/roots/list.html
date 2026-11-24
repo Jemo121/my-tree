@@ -1,0 +1,10 @@
+{{- define "main" }}
+<main class="roots-page" aria-labelledby="roots-title">
+  <div class="roots-inner">
+    <p class="roots-icon" aria-hidden="true">🌱</p>
+    <h1 id="roots-title">{{ i18n "roots_title" }}</h1>
+    <p>{{ i18n "roots_desc" }}</p>
+    <a href="{{ .Site.BaseURL }}" class="roots-back">{{ i18n "roots_back" }}</a>
+  </div>
+</main>
+{{- end }}

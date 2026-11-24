@@ -1,0 +1,7 @@
+<nav class="lang-switch" aria-label="Language">
+  {{ if eq .Site.Language.Lang "en" }}
+    <a href="/es/" hreflang="es" lang="es">{{ i18n "lang_switch" }}</a>
+  {{ else }}
+    <a href="/" hreflang="en" lang="en">{{ i18n "lang_switch" }}</a>
+  {{ end }}
+</nav>

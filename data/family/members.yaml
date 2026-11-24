@@ -1,6 +1,9 @@
+# status values: active | roots
+# active = current family member; roots = historical/deceased ancestor
 - name: Emilio Eguia
   subdomain: emilio
   template: sharp
   generation: 1
   parent: null
   status: active
+  icon: leaf
