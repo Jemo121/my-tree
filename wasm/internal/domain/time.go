@@ -99,16 +99,16 @@ type WeatherState struct {
 	Elapsed   float64 // seconds in current state
 	Duration  float64 // total seconds for this state
 
-	WindAngle float64
-	WindSpeed float64
+	WindAngle    float64
+	WindSpeed    float64
+	WindStrength float64 // 0.0–1.0, updated each tick by TickWithCursor
 
 	RainDrops  []RainDrop
 	CloudPuffs []CloudPuff
 	CloudCover float64
 
-	// Thunder
-	ThunderTimer  float64 // seconds until next strike
-	FlashElapsed  float64 // seconds since last flash start (-1 = inactive)
+	ThunderTimer float64 // seconds until next thunder strike
+	FlashElapsed float64 // seconds since last flash start (-1 = inactive)
 }
 
 type weatherTransition struct {
