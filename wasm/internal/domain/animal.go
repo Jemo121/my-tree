@@ -4,11 +4,31 @@ package domain
 type AnimalType int
 
 const (
-	AnimalBird AnimalType = iota
-	AnimalSquirrel
-	AnimalDeer
-	AnimalButterfly
+	AnimalBird      AnimalType = iota
+	AnimalSquirrel             // tree-bound, year-round
+	AnimalDeer                 // rare ground appearance, slow walk across
+	AnimalButterfly            // passive drift across canvas, any time of day
+	AnimalFirefly              // night-only, glow/pulse effect, slow drift
+	AnimalFox                  // rare ground appearance, non-winter
+	AnimalSnowFox              // rare ground appearance, winter only (white coat)
 )
+
+// Spawn probability constants (per tick).
+const (
+	SpawnProbButterfly = 0.002  // per tick
+	SpawnProbFirefly   = 0.003  // per tick, night only
+	SpawnProbDeer      = 0.0001 // rare; at most one active at a time
+	SpawnProbFox       = 0.0001 // rare; at most one Fox/SnowFox active at a time
+)
+
+// CanSpawnFirefly returns true only during nighttime.
+func CanSpawnFirefly(isNight bool) bool { return isNight }
+
+// CanSpawnFox returns true outside of winter season.
+func CanSpawnFox(season Season) bool { return season != SeasonWinter }
+
+// CanSpawnSnowFox returns true only during winter.
+func CanSpawnSnowFox(season Season) bool { return season == SeasonWinter }
 
 // AnimalState is the current behaviour mode of an animal.
 type AnimalState int
