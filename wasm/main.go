@@ -31,7 +31,7 @@ func main() {
 	signSwing := &render.SignSwinger{}
 	particles := &render.ParticleSystem{}
 	events := input.Register("family-tree")
-	overlays := input.NewOverlayManager("tree-canvas")
+	overlays := input.NewOverlayManager("family-tree")
 
 	signCfg := assets.LoadSignConfig()
 
