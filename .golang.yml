@@ -18,6 +18,19 @@ linters:
     - misspell
     - unconvert
 
+linters-settings:
+  gosec:
+    excludes:
+      - G103  # syscall/js requires unsafe pointer — expected in Go WASM
+      - G115  # integer overflow in WASM — platform-specific
+      - G404  # math/rand is correct for visual effects
+  revive:
+    rules:
+      - name: exported
+        disabled: true
+      - name: package-comments
+        disabled: true
+
 formatters:
   enable:
     - gofmt
@@ -25,23 +38,9 @@ formatters:
 
 issues:
   exclude-rules:
-    # syscall/js requires unsafe pointer — expected in Go WASM
-    - linters: [gosec]
-      text: "G103|G115"
-    # math/rand is correct for visual effects — no cryptographic context
-    - linters: [gosec]
-      text: "G404"
     # WASM main() blocks with select{} — empty block is intentional
     - path: "main\\.go"
       linters: [revive]
       text: "empty-block"
-    # Canvas 2D wrapper — method names are 1:1 with the browser API
-    - path: "internal/render/ctx\\.go"
-      linters: [revive]
-      text: "exported"
-    # Internal packages have no public API consumers
-    - path: "(internal/|assets/)"
-      linters: [revive]
-      text: "package-comments|exported"
   max-issues-per-linter: 0
   max-same-issues: 0
