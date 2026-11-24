@@ -17,19 +17,18 @@ linters:
     - gosec
     - misspell
     - unconvert
-
-linters-settings:
-  gosec:
-    excludes:
-      - G103  # syscall/js requires unsafe pointer — expected in Go WASM
-      - G115  # integer overflow in WASM — platform-specific
-      - G404  # math/rand is correct for visual effects
-  revive:
-    rules:
-      - name: exported
-        disabled: true
-      - name: package-comments
-        disabled: true
+  settings:
+    gosec:
+      excludes:
+        - G103  # syscall/js requires unsafe pointer — expected in Go WASM
+        - G115  # integer overflow in WASM — platform-specific
+        - G404  # math/rand is correct for visual effects
+    revive:
+      rules:
+        - name: exported
+          disabled: true
+        - name: package-comments
+          disabled: true
 
 formatters:
   enable:
