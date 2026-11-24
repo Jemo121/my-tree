@@ -54,5 +54,11 @@ uninstall-hooks:
 	@echo "==> Removing pre-commit hook"
 	rm -f $(REPO_ROOT)/.git/hooks/pre-commit
 
+## Fetch wasm_exec.js from Go SDK (requires WASM_GO_VERSION, default 1.27.4)
+copy-wasm-exec:
+	@echo "==> copy-wasm-exec"
+	wget -qO static/wasm_exec.js \
+	  "https://raw.githubusercontent.com/golang/go/go$${WASM_GO_VERSION:-1.27.4}/lib/wasm/wasm_exec.js"
+
 help:
 	@grep -E '^##' Makefile | sed 's/^## //'
