@@ -67,7 +67,7 @@ func (s *ShakeSystem) HasShake() bool { return len(s.shakes) > 0 }
 // pseudoRand returns a deterministic pseudo-random value in [0,1) for index i.
 // Used to avoid importing math/rand in the render hot path.
 func pseudoRand(i int) float64 {
-	x := uint64(i)*6364136223846793005 + 1442695040888963407
+	x := uint64(max(0, i))*6364136223846793005 + 1442695040888963407
 	x ^= x >> 33
 	x *= 0xff51afd7ed558ccd
 	x ^= x >> 33
