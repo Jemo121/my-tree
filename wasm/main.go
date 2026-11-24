@@ -7,7 +7,6 @@ import (
 	"time"
 
 	"eguia.me/wasm/assets"
-	"eguia.me/wasm/internal/audio"
 	"eguia.me/wasm/internal/config"
 	"eguia.me/wasm/internal/domain"
 	"eguia.me/wasm/internal/input"
@@ -28,7 +27,6 @@ func main() {
 	treeLayout := layout.Build(members, ctx.W, ctx.H)
 	weather := domain.NewWeatherState()
 	shakes := &render.ShakeSystem{}
-	player := audio.NewPlayer()
 	events := input.Register("tree-canvas")
 	overlays := input.NewOverlayManager("tree-canvas")
 
@@ -77,7 +75,7 @@ func main() {
 
 		grid := input.Build(treeLayout, weather)
 		for _, click := range events.Clicks {
-			handleClick(click, ctx.W, grid, treeLayout, weather, shakes, player)
+			handleClick(click, grid, treeLayout, weather, shakes)
 		}
 
 		dx, dy := shakes.Offset()
@@ -128,14 +126,11 @@ func loadMembers() ([]*domain.Member, error) {
 
 func handleClick(
 	click domain.Vec2,
-	canvasW float64,
 	grid *input.SpatialGrid,
 	treeLayout *domain.TreeLayout,
 	weather *domain.WeatherState,
 	shakes *render.ShakeSystem,
-	player *audio.Player,
 ) {
-	player.Resume()
 	target := grid.Query(click)
 	action, url := target.Resolve(weather)
 
@@ -144,27 +139,16 @@ func handleClick(
 		js.Global().Get("location").Set("href", url)
 	case domain.ActionShakeTrunk:
 		shakes.Add(render.ShakeTrunk, treeLayout.TrunkBase, 8)
-		player.Play(audio.SoundKnock, 0.5, 0)
 	case domain.ActionShakeLeaves:
 		shakes.Add(render.ShakeLocal, click, 4)
-		player.Play(audio.SoundRustle, 0.4, panFromX(click.X, canvasW))
 	case domain.ActionShakeRoots:
 		shakes.Add(render.ShakeEarth, click, 5)
-		player.Play(audio.SoundThud, 0.4, panFromX(click.X, canvasW))
 	case domain.ActionSplashCloud, domain.ActionVanishCloud:
 		render.VanishCloud(weather, target.CloudIdx)
-		player.Play(audio.SoundDrop, 0.3, panFromX(target.Position.X, canvasW))
 	case domain.ActionShowSign:
 		render.UpdateSignPanel(treeLayout)
 		render.ShowSignPanel()
 	}
-}
-
-func panFromX(x, canvasW float64) float64 {
-	if canvasW == 0 {
-		return 0
-	}
-	return (x/canvasW)*2 - 1
 }
 
 func bindCloseButton() {
