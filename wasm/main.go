@@ -28,6 +28,7 @@ func main() {
 	weather := domain.NewWeatherState()
 	shakes := &render.ShakeSystem{}
 	signSwing := &render.SignSwinger{}
+	particles := &render.ParticleSystem{}
 	events := input.Register("tree-canvas")
 	overlays := input.NewOverlayManager("tree-canvas")
 
@@ -64,6 +65,7 @@ func main() {
 		weather.Tick(dt)
 		shakes.Tick()
 		signSwing.Tick()
+		particles.Tick(dt)
 		render.SpawnRainDrops(weather, ctx.W, ctx.H)
 		if len(weather.CloudPuffs) == 0 {
 			render.UpdateCloudPuffs(weather, ctx.W, ctx.H)
@@ -77,6 +79,22 @@ func main() {
 		render.SetCSSVar("--sky-top", cs.SkyTop)
 		render.SetCSSVar("--sky-bottom", cs.SkyBottom)
 
+		// Seasonal particle emission
+		crown := treeLayout.CrownBounds
+		crownCX := (crown.Min.X + crown.Max.X) / 2
+		crownCY := (crown.Min.Y + crown.Max.Y) / 2
+		switch season {
+		case domain.SeasonAutumn:
+			particles.EmitLeaves(crownCX, crownCY, weather.WindStrength)
+		case domain.SeasonWinter:
+			doubleSnow := weather.Type == domain.WeatherSnowy
+			particles.EmitSnow(ctx.W, weather.WindStrength, doubleSnow)
+		case domain.SeasonSpring:
+			particles.TriggerBudPop(season, nil)
+		default:
+			particles.TriggerBudPop(season, nil) // arms re-trigger for next spring
+		}
+
 		grid := input.Build(treeLayout, weather)
 		for _, click := range events.Clicks {
 			handleClick(click, grid, treeLayout, weather, shakes, signSwing, signCfg)
@@ -88,6 +106,7 @@ func main() {
 		ctx.ClearRect(0, 0, ctx.W, ctx.H)
 		render.DrawBackground(ctx, treeLayout, cs, weather, tod)
 		render.DrawTree(ctx, treeLayout, cs, shakeOff)
+		particles.Draw(ctx)
 		render.DrawMembers(ctx, treeLayout, cs)
 		render.DrawWeather(ctx, weather, cs)
 		render.DrawSign(ctx, treeLayout)
