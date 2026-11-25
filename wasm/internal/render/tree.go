@@ -166,18 +166,7 @@ func drawActiveMember(ctx *Ctx, m *domain.Member, cs config.ColorSet) {
 	ctx.Save()
 	ctx.Translate(p.X, p.Y)
 
-	switch m.Icon {
-	case domain.IconLeaf:
-		drawLeafGlyph(ctx, r, cs.LeafPri)
-	case domain.IconFruit:
-		drawFruitGlyph(ctx, r, cs.FruitCol)
-	case domain.IconFlower:
-		drawFlowerGlyph(ctx, r, cs.FlowerCol)
-	case domain.IconTwig:
-		drawTwigGlyph(ctx, r, cs.TwigCol)
-	default:
-		drawLeafGlyph(ctx, r, cs.LeafPri)
-	}
+	drawFruitGlyph(ctx, r, m.Icon)
 
 	ctx.Restore()
 }
@@ -197,89 +186,289 @@ func drawInactiveMember(ctx *Ctx, m *domain.Member, cs config.ColorSet) {
 	ctx.SetAlpha(1)
 }
 
-// Icon drawing functions — each uses a normalised coordinate system centred at origin.
 
-func drawLeafGlyph(ctx *Ctx, r float64, color string) {
-	ctx.SetFill(color)
-	ctx.BeginPath()
-	ctx.MoveTo(0, -r)
-	ctx.BezierCurveTo(r*0.9, -r*0.5, r*0.9, r*0.5, 0, r*0.6)
-	ctx.BezierCurveTo(-r*0.9, r*0.5, -r*0.9, -r*0.5, 0, -r)
-	ctx.ClosePath()
-	ctx.Fill()
-	// midrib
-	ctx.SetStroke(darken(color, 0.4))
-	ctx.SetLineWidth(1.5)
-	ctx.BeginPath()
-	ctx.MoveTo(0, -r)
-	ctx.LineTo(0, r*0.5)
-	ctx.Stroke()
+
+// drawFruitGlyph renders the member's chosen fruit at radius r centred on the origin.
+func drawFruitGlyph(ctx *Ctx, r float64, icon domain.MemberIcon) {
+	switch icon {
+	case domain.IconApple:
+		fruitRound(ctx, r, "#c0392b", true)
+	case domain.IconPear:
+		fruitPear(ctx, r, "#a8c94b")
+	case domain.IconQuince:
+		fruitPear(ctx, r, "#e3b84a")
+	case domain.IconCherry:
+		fruitCherry(ctx, r, "#8b1a1a")
+	case domain.IconPlum:
+		fruitRound(ctx, r, "#6a0dad", false)
+	case domain.IconPeach:
+		fruitCreased(ctx, r, "#f4a460", "#e8724a")
+	case domain.IconApricot:
+		fruitCreased(ctx, r, "#f0a030", "#e07820")
+	case domain.IconMango:
+		fruitMango(ctx, r)
+	case domain.IconAvocado:
+		fruitAvocado(ctx, r)
+	case domain.IconOrange:
+		fruitRound(ctx, r, "#e67e22", true)
+	case domain.IconLemon:
+		fruitLemon(ctx, r, "#f9e547")
+	case domain.IconLime:
+		fruitLemon(ctx, r, "#7dc843")
+	case domain.IconGrapefruit:
+		fruitRound(ctx, r, "#f4a0a0", true)
+	case domain.IconPomelo:
+		fruitRound(ctx, r, "#d4e08a", true)
+	case domain.IconCoconut:
+		fruitCoconut(ctx, r)
+	case domain.IconFig:
+		fruitFig(ctx, r)
+	case domain.IconDate:
+		fruitDate(ctx, r)
+	case domain.IconLychee:
+		fruitLychee(ctx, r)
+	case domain.IconPomegranate:
+		fruitPomegranate(ctx, r)
+	case domain.IconPersimmon:
+		fruitPersimmon(ctx, r)
+	default:
+		fruitRound(ctx, r, "#c0392b", true) // fallback: apple
+	}
 }
 
-func drawFruitGlyph(ctx *Ctx, r float64, color string) {
-	ctx.SetFill(color)
-	ctx.BeginPath()
-	ctx.Arc(0, r*0.1, r*0.85, 0, math.Pi*2)
-	ctx.Fill()
-	// stem
+// stem draws a short brown stem above the origin.
+func stem(ctx *Ctx, r float64) {
 	ctx.SetStroke("#5d4037")
 	ctx.SetLineWidth(2)
 	ctx.BeginPath()
-	ctx.MoveTo(0, -r*0.75)
-	ctx.LineTo(0, -r*0.1)
+	ctx.MoveTo(0, -r*0.85)
+	ctx.LineTo(0, -r*0.5)
 	ctx.Stroke()
-	// shine
-	ctx.SetFill("rgba(255,255,255,0.25)")
+}
+
+// shine draws a small highlight circle at upper-left.
+func shine(ctx *Ctx, r float64) {
+	ctx.SetFill("rgba(255,255,255,0.28)")
 	ctx.BeginPath()
-	ctx.Arc(-r*0.25, -r*0.15, r*0.25, 0, math.Pi*2)
+	ctx.Arc(-r*0.28, -r*0.28, r*0.22, 0, math.Pi*2)
 	ctx.Fill()
 }
 
-func drawFlowerGlyph(ctx *Ctx, r float64, color string) {
-	petals := 5
-	pr := r * 0.55
-	for i := 0; i < petals; i++ {
-		angle := float64(i) * math.Pi * 2 / float64(petals)
+// fruitRound draws a simple round fruit. withDimple adds a top indentation.
+func fruitRound(ctx *Ctx, r float64, color string, withDimple bool) {
+	ctx.SetFill(color)
+	ctx.BeginPath()
+	ctx.Arc(0, r*0.08, r*0.82, 0, math.Pi*2)
+	ctx.Fill()
+	if withDimple {
+		ctx.SetFill("rgba(0,0,0,0.12)")
 		ctx.BeginPath()
-		ctx.Arc(pr*math.Cos(angle), pr*math.Sin(angle), r*0.42, 0, math.Pi*2)
-		ctx.SetFill(color)
+		ctx.Arc(0, -r*0.6, r*0.18, 0, math.Pi*2)
 		ctx.Fill()
 	}
-	// centre
-	ctx.BeginPath()
-	ctx.Arc(0, 0, r*0.32, 0, math.Pi*2)
-	ctx.SetFill("#fff9c4")
-	ctx.Fill()
+	stem(ctx, r)
+	shine(ctx, r)
 }
 
-func drawTwigGlyph(ctx *Ctx, r float64, color string) {
-	ctx.SetStroke(color)
-	ctx.SetLineWidth(3)
-	ctx.SetLineCap("round")
-	// main stick
+// fruitPear draws a teardrop pear/quince shape.
+func fruitPear(ctx *Ctx, r float64, color string) {
+	ctx.SetFill(color)
 	ctx.BeginPath()
-	ctx.MoveTo(0, r)
-	ctx.LineTo(0, -r*0.4)
-	ctx.Stroke()
-	// two small branches — visually distinct from leaf
+	ctx.MoveTo(0, -r*0.75)
+	ctx.BezierCurveTo(r*0.6, -r*0.5, r*0.9, r*0.1, r*0.5, r*0.65)
+	ctx.BezierCurveTo(r*0.2, r*0.9, -r*0.2, r*0.9, -r*0.5, r*0.65)
+	ctx.BezierCurveTo(-r*0.9, r*0.1, -r*0.6, -r*0.5, 0, -r*0.75)
+	ctx.ClosePath()
+	ctx.Fill()
+	stem(ctx, r)
+	shine(ctx, r)
+}
+
+// fruitCherry draws a small cherry with a long stem.
+func fruitCherry(ctx *Ctx, r float64, color string) {
+	cr := r * 0.6 // cherry ball radius
+	ctx.SetFill(color)
+	ctx.BeginPath()
+	ctx.Arc(0, r*0.3, cr, 0, math.Pi*2)
+	ctx.Fill()
+	// long stem curves up
+	ctx.SetStroke("#5d4037")
 	ctx.SetLineWidth(2)
 	ctx.BeginPath()
-	ctx.MoveTo(0, -r*0.1)
-	ctx.LineTo(r*0.6, -r*0.75)
+	ctx.MoveTo(0, r*0.3-cr)
+	ctx.BezierCurveTo(r*0.1, -r*0.2, r*0.3, -r*0.6, 0, -r*0.85)
 	ctx.Stroke()
-	ctx.BeginPath()
-	ctx.MoveTo(0, r*0.2)
-	ctx.LineTo(-r*0.55, -r*0.45)
-	ctx.Stroke()
-	// tiny buds at branch tips
-	ctx.SetFill(csFlowerFallback)
-	ctx.BeginPath()
-	ctx.Arc(r*0.6, -r*0.75, 3, 0, math.Pi*2)
-	ctx.Fill()
-	ctx.BeginPath()
-	ctx.Arc(-r*0.55, -r*0.45, 3, 0, math.Pi*2)
-	ctx.Fill()
+	shine(ctx, r*0.9)
 }
 
-// csFlowerFallback is used when ColorSet is not in scope for tiny bud accents.
-const csFlowerFallback = "#f48fb1"
+// fruitCreased draws a peach/apricot — round with a vertical crease.
+func fruitCreased(ctx *Ctx, r float64, body, crease string) {
+	ctx.SetFill(body)
+	ctx.BeginPath()
+	ctx.Arc(0, r*0.08, r*0.82, 0, math.Pi*2)
+	ctx.Fill()
+	// crease line
+	ctx.SetStroke(crease)
+	ctx.SetLineWidth(1.5)
+	ctx.BeginPath()
+	ctx.MoveTo(0, -r*0.65)
+	ctx.BezierCurveTo(r*0.08, 0, r*0.08, r*0.4, 0, r*0.72)
+	ctx.Stroke()
+	stem(ctx, r)
+	shine(ctx, r)
+}
+
+// fruitMango draws a kidney-shaped mango.
+func fruitMango(ctx *Ctx, r float64) {
+	ctx.SetFill("#f9a825")
+	ctx.BeginPath()
+	ctx.MoveTo(0, -r*0.8)
+	ctx.BezierCurveTo(r*0.9, -r*0.5, r*0.9, r*0.6, r*0.1, r*0.85)
+	ctx.BezierCurveTo(-r*0.5, r*0.9, -r*0.9, r*0.4, -r*0.6, -r*0.3)
+	ctx.BezierCurveTo(-r*0.4, -r*0.7, -r*0.1, -r*0.9, 0, -r*0.8)
+	ctx.ClosePath()
+	ctx.Fill()
+	// blush
+	ctx.SetFill("rgba(220,60,20,0.25)")
+	ctx.BeginPath()
+	ctx.Arc(r*0.3, 0, r*0.45, 0, math.Pi*2)
+	ctx.Fill()
+	stem(ctx, r)
+	shine(ctx, r)
+}
+
+// fruitAvocado draws a dark pear-shaped avocado.
+func fruitAvocado(ctx *Ctx, r float64) {
+	ctx.SetFill("#2d5a1b")
+	ctx.BeginPath()
+	ctx.MoveTo(0, -r*0.85)
+	ctx.BezierCurveTo(r*0.5, -r*0.5, r*0.85, r*0.1, r*0.5, r*0.7)
+	ctx.BezierCurveTo(r*0.2, r*0.95, -r*0.2, r*0.95, -r*0.5, r*0.7)
+	ctx.BezierCurveTo(-r*0.85, r*0.1, -r*0.5, -r*0.5, 0, -r*0.85)
+	ctx.ClosePath()
+	ctx.Fill()
+	// seed
+	ctx.SetFill("#8b4513")
+	ctx.BeginPath()
+	ctx.Arc(0, r*0.25, r*0.3, 0, math.Pi*2)
+	ctx.Fill()
+	stem(ctx, r)
+}
+
+// fruitLemon draws an oval with pointed ends.
+func fruitLemon(ctx *Ctx, r float64, color string) {
+	ctx.SetFill(color)
+	ctx.BeginPath()
+	ctx.MoveTo(0, -r*0.9)
+	ctx.BezierCurveTo(r*0.7, -r*0.8, r*0.85, r*0.4, 0, r*0.9)
+	ctx.BezierCurveTo(-r*0.85, r*0.4, -r*0.7, -r*0.8, 0, -r*0.9)
+	ctx.ClosePath()
+	ctx.Fill()
+	stem(ctx, r)
+	shine(ctx, r)
+}
+
+// fruitCoconut draws a brown oval with a fibrous ring.
+func fruitCoconut(ctx *Ctx, r float64) {
+	ctx.SetFill("#795548")
+	ctx.BeginPath()
+	ctx.Arc(0, 0, r*0.82, 0, math.Pi*2)
+	ctx.Fill()
+	ctx.SetStroke("#4e342e")
+	ctx.SetLineWidth(1.5)
+	ctx.BeginPath()
+	ctx.Arc(0, 0, r*0.55, 0, math.Pi*2)
+	ctx.Stroke()
+}
+
+// fruitFig draws a dark teardrop with a flat bottom.
+func fruitFig(ctx *Ctx, r float64) {
+	ctx.SetFill("#6a1b6e")
+	ctx.BeginPath()
+	ctx.MoveTo(0, -r*0.85)
+	ctx.BezierCurveTo(r*0.6, -r*0.5, r*0.75, r*0.3, r*0.6, r*0.75)
+	ctx.LineTo(-r*0.6, r*0.75)
+	ctx.BezierCurveTo(-r*0.75, r*0.3, -r*0.6, -r*0.5, 0, -r*0.85)
+	ctx.ClosePath()
+	ctx.Fill()
+	// flat bottom seam
+	ctx.SetStroke("#4a0050")
+	ctx.SetLineWidth(1)
+	ctx.BeginPath()
+	ctx.MoveTo(-r*0.4, r*0.75)
+	ctx.LineTo(r*0.4, r*0.75)
+	ctx.Stroke()
+	stem(ctx, r)
+}
+
+// fruitDate draws an elongated amber oval.
+func fruitDate(ctx *Ctx, r float64) {
+	ctx.SetFill("#bf8040")
+	ctx.BeginPath()
+	ctx.MoveTo(0, -r*0.9)
+	ctx.BezierCurveTo(r*0.5, -r*0.7, r*0.5, r*0.7, 0, r*0.9)
+	ctx.BezierCurveTo(-r*0.5, r*0.7, -r*0.5, -r*0.7, 0, -r*0.9)
+	ctx.ClosePath()
+	ctx.Fill()
+	stem(ctx, r)
+	shine(ctx, r)
+}
+
+// fruitLychee draws a small red sphere with bumpy skin.
+func fruitLychee(ctx *Ctx, r float64) {
+	ctx.SetFill("#c0392b")
+	ctx.BeginPath()
+	ctx.Arc(0, 0, r*0.82, 0, math.Pi*2)
+	ctx.Fill()
+	// bumps — small darker circles on surface
+	ctx.SetFill("rgba(0,0,0,0.15)")
+	for i, angle := range []float64{0, 1, 2, 3, 4, 5} {
+		a := angle * math.Pi / 3
+		bx := math.Cos(a) * r * 0.52
+		by := math.Sin(a) * r * 0.52
+		ctx.BeginPath()
+		ctx.Arc(bx, by, r*0.18, 0, math.Pi*2)
+		ctx.Fill()
+		_ = i
+	}
+	stem(ctx, r)
+	shine(ctx, r)
+}
+
+// fruitPomegranate draws a round red fruit with a prominent crown.
+func fruitPomegranate(ctx *Ctx, r float64) {
+	ctx.SetFill("#8b1a1a")
+	ctx.BeginPath()
+	ctx.Arc(0, r*0.1, r*0.78, 0, math.Pi*2)
+	ctx.Fill()
+	// crown — 5 small spikes at top
+	ctx.SetFill("#4a0a0a")
+	for i := 0; i < 5; i++ {
+		a := (float64(i)/5)*math.Pi - math.Pi*0.5
+		px := math.Cos(a) * r * 0.35
+		py := -r*0.55 + math.Sin(a)*r*0.1
+		ctx.BeginPath()
+		ctx.Arc(px, py, r*0.1, 0, math.Pi*2)
+		ctx.Fill()
+	}
+	shine(ctx, r)
+}
+
+// fruitPersimmon draws an orange round fruit with a 4-petal calyx.
+func fruitPersimmon(ctx *Ctx, r float64) {
+	ctx.SetFill("#e8792a")
+	ctx.BeginPath()
+	ctx.Arc(0, r*0.08, r*0.82, 0, math.Pi*2)
+	ctx.Fill()
+	// 4-leaf calyx at top
+	ctx.SetFill("#4caf50")
+	for i := 0; i < 4; i++ {
+		a := float64(i)*math.Pi/2 + math.Pi/4
+		lx := math.Cos(a) * r * 0.38
+		ly := -r*0.65 + math.Sin(a)*r*0.18
+		ctx.BeginPath()
+		ctx.Arc(lx, ly, r*0.2, 0, math.Pi*2)
+		ctx.Fill()
+	}
+	shine(ctx, r)
+}

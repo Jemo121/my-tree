@@ -9,15 +9,39 @@ const (
 	StatusInactive MemberStatus = "inactive"
 )
 
-// MemberIcon determines which glyph represents the member in the crown.
+// MemberIcon identifies which fruit glyph represents the member in the crown.
+// Each member chooses their own fruit. Only tree fruits are valid.
 type MemberIcon string
 
-// MemberIcon values.
+// MemberIcon values — pome, stone, citrus, tropical.
 const (
-	IconLeaf   MemberIcon = "leaf"
-	IconFruit  MemberIcon = "fruit"
-	IconFlower MemberIcon = "flower"
-	IconTwig   MemberIcon = "twig"
+	// Pome
+	IconApple  MemberIcon = "apple"
+	IconPear   MemberIcon = "pear"
+	IconQuince MemberIcon = "quince"
+
+	// Stone fruits
+	IconCherry  MemberIcon = "cherry"
+	IconPlum    MemberIcon = "plum"
+	IconPeach   MemberIcon = "peach"
+	IconApricot MemberIcon = "apricot"
+	IconMango   MemberIcon = "mango"
+	IconAvocado MemberIcon = "avocado"
+
+	// Citrus
+	IconOrange     MemberIcon = "orange"
+	IconLemon      MemberIcon = "lemon"
+	IconLime       MemberIcon = "lime"
+	IconGrapefruit MemberIcon = "grapefruit"
+	IconPomelo     MemberIcon = "pomelo"
+
+	// Tropical / Mediterranean
+	IconCoconut     MemberIcon = "coconut"
+	IconFig         MemberIcon = "fig"
+	IconDate        MemberIcon = "date"
+	IconLychee      MemberIcon = "lychee"
+	IconPomegranate MemberIcon = "pomegranate"
+	IconPersimmon   MemberIcon = "persimmon"
 )
 
 // Member holds one family member's data plus runtime position state.
