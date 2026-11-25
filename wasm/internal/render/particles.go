@@ -94,27 +94,26 @@ func cullDead(pp []Particle) []Particle {
 	return live
 }
 
-// EmitLeaves spawns 0-2 leaf particles per call during Autumn.
-// crownX, crownY is the approximate crown centre; windStrength tilts drift.
-func (ps *ParticleSystem) EmitLeaves(crownX, crownY, windStrength float64) {
+// EmitLeaves spawns 0-1 leaf particles per call during Autumn.
+// crownRadius controls the emission spread across the crown area.
+func (ps *ParticleSystem) EmitLeaves(crownX, crownY, crownRadius, windStrength float64) {
 	if len(ps.leaves) >= maxLeaves {
 		return
 	}
-	count := rand.IntN(3) // 0, 1, or 2
 	leafColors := [4]string{"#D2691E", "#FF8C00", "#DAA520", "#B22222"}
-	for range count {
-		if len(ps.leaves) >= maxLeaves {
-			break
-		}
-		spreadX := (rand.Float64() - 0.5) * 120
-		ps.leaves = append(ps.leaves, Particle{
-			Pos:   domain.Vec2{X: crownX + spreadX, Y: crownY - rand.Float64()*40},
-			Vel:   domain.Vec2{X: windStrength*30 + (rand.Float64()-0.5)*10, Y: 25 + rand.Float64()*15},
-			Max:   2.5 + rand.Float64()*1.5,
-			Size:  3 + rand.Float64()*3,
-			Color: leafColors[rand.IntN(4)],
-		})
+	if rand.IntN(2) == 0 {
+		return // 50% chance to skip — keeps density natural at reduced call rate
 	}
+	// Distribute across the crown silhouette, not just the centre.
+	angle := rand.Float64() * math.Pi * 2
+	r := rand.Float64() * crownRadius * 0.85
+	ps.leaves = append(ps.leaves, Particle{
+		Pos:   domain.Vec2{X: crownX + r*math.Cos(angle), Y: crownY + r*math.Sin(angle)*0.6},
+		Vel:   domain.Vec2{X: windStrength*30 + (rand.Float64()-0.5)*12, Y: 28 + rand.Float64()*18},
+		Max:   3.0 + rand.Float64()*2.0,
+		Size:  3 + rand.Float64()*3,
+		Color: leafColors[rand.IntN(4)],
+	})
 }
 
 // EmitSnow spawns snowflake particles. doubleRate doubles emission for WeatherSnowy.

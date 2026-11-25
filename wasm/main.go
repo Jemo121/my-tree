@@ -80,20 +80,23 @@ func main() {
 		render.SetCSSVar("--sky-top", cs.SkyTop)
 		render.SetCSSVar("--sky-bottom", cs.SkyBottom)
 
-		// Seasonal particle emission
+		// Seasonal particle emission — rate-limited to every 3 frames (~20 Hz)
 		crown := treeLayout.CrownBounds
 		crownCX := (crown.Min.X + crown.Max.X) / 2
 		crownCY := (crown.Min.Y + crown.Max.Y) / 2
-		switch season {
-		case domain.SeasonAutumn:
-			particles.EmitLeaves(crownCX, crownCY, weather.WindStrength)
-		case domain.SeasonWinter:
-			doubleSnow := weather.Type == domain.WeatherSnowy
-			particles.EmitSnow(ctx.W, weather.WindStrength, doubleSnow)
-		case domain.SeasonSpring:
-			particles.TriggerBudPop(season, nil)
-		default:
-			particles.TriggerBudPop(season, nil) // arms re-trigger for next spring
+		crownRadius := (crown.Max.X - crown.Min.X) / 2
+		if frameCount%3 == 0 {
+			switch season {
+			case domain.SeasonAutumn:
+				particles.EmitLeaves(crownCX, crownCY, crownRadius, weather.WindStrength)
+			case domain.SeasonWinter:
+				doubleSnow := weather.Type == domain.WeatherSnowy
+				particles.EmitSnow(ctx.W, weather.WindStrength, doubleSnow)
+			case domain.SeasonSpring:
+				particles.TriggerBudPop(season, nil)
+			default:
+				particles.TriggerBudPop(season, nil) // arms re-trigger for next spring
+			}
 		}
 
 		grid := input.Build(treeLayout, weather)
@@ -110,7 +113,7 @@ func main() {
 		particles.Draw(ctx)
 		render.DrawMembers(ctx, treeLayout, cs)
 		render.DrawWeather(ctx, weather, cs)
-		render.DrawSign(ctx, treeLayout)
+		render.DrawSign(ctx, treeLayout, signSwing.Angle)
 		render.DrawFlash(ctx, weather)
 
 		if frameCount%3 == 0 {

@@ -28,19 +28,28 @@ func (s *SignSwinger) Tick() {
 }
 
 // DrawSign renders the wooden sign element on the canvas.
-// swinger may be nil (no swing applied).
-func DrawSign(ctx *Ctx, layout *domain.TreeLayout) {
+// swing is the current rotation angle in radians (from SignSwinger); 0 means upright.
+func DrawSign(ctx *Ctx, layout *domain.TreeLayout, swing float64) {
 	sb := layout.SignBounds
 	w := sb.Max.X - sb.Min.X
 	h := sb.Max.Y - sb.Min.Y
 	cx := (sb.Min.X + sb.Max.X) / 2
+	postH := layout.GroundY - sb.Max.Y
+	postW := 7.0 // px per post
 
-	// Post
-	postX := cx - 2
+	// Two posts at ~25% inset from each side of the board.
+	leftPost := sb.Min.X + w*0.22
+	rightPost := sb.Max.X - w*0.22
 	ctx.SetFill("#5c3a1e")
-	ctx.FillRect(postX, sb.Max.Y, 4, layout.GroundY-sb.Max.Y)
+	ctx.FillRect(leftPost, sb.Max.Y, postW, postH)
+	ctx.FillRect(rightPost, sb.Max.Y, postW, postH)
 
-	// Board
+	// Board — rotates around the post tops on swing.
+	ctx.Save()
+	ctx.Translate(cx, sb.Max.Y)
+	ctx.Rotate(swing)
+	ctx.Translate(-cx, -sb.Max.Y)
+
 	ctx.BeginPath()
 	ctx.MoveTo(sb.Min.X+4, sb.Min.Y)
 	ctx.LineTo(sb.Max.X-4, sb.Min.Y)
@@ -57,12 +66,13 @@ func DrawSign(ctx *Ctx, layout *domain.TreeLayout) {
 	ctx.SetLineWidth(1.5)
 	ctx.Stroke()
 
-	// Text — small "?" to invite clicking
+	// Text — small "?" to invite clicking.
 	ctx.SetFill("#f5e6c8")
 	ctx.SetFont("bold " + fontSize(h*0.5) + "px Georgia, serif")
 	ctx.SetTextAlign("center")
 	ctx.SetTextBaseline("middle")
 	ctx.FillText("?", cx, (sb.Min.Y+sb.Max.Y)/2)
+	ctx.Restore()
 	_ = w
 }
 

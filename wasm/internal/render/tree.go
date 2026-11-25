@@ -10,14 +10,14 @@ import (
 )
 
 // DrawTree renders the trunk, crown mass, root zone, and rocks.
+// shakeOff is applied only to the trunk and crown — the root zone is anchored to the ground.
 func DrawTree(ctx *Ctx, layout *domain.TreeLayout, cs config.ColorSet, shakeOff domain.Vec2) {
+	drawRootZone(ctx, layout, cs)
+
 	ctx.Save()
 	ctx.Translate(shakeOff.X, shakeOff.Y)
-
-	drawRootZone(ctx, layout, cs)
 	drawTrunk(ctx, layout, cs)
 	drawCrown(ctx, layout, cs)
-
 	ctx.Restore()
 }
 
