@@ -161,7 +161,7 @@ func drawRock(ctx *Ctx, x, y float64, cs config.ColorSet) {
 	ctx.SetAlpha(1)
 }
 
-func drawActiveMember(ctx *Ctx, m *domain.Member, cs config.ColorSet) {
+func drawActiveMember(ctx *Ctx, m *domain.Member, _ config.ColorSet) {
 	p := m.Position
 	r := config.GlyphRadiusActive
 	ctx.Save()
@@ -186,4 +186,3 @@ func drawInactiveMember(ctx *Ctx, m *domain.Member, cs config.ColorSet) {
 	ctx.Stroke()
 	ctx.SetAlpha(1)
 }
-
