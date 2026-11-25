@@ -90,30 +90,68 @@ func drawStars(ctx *Ctx, cw, skyH float64) {
 }
 
 func drawClouds(ctx *Ctx, _ *domain.TreeLayout, weather *domain.WeatherState, _ config.ColorSet) {
-	cw := ctx.W
-	cloudAlpha := weather.CloudCover * 0.75
-	for i, puff := range weather.CloudPuffs {
+	color := "#d8e4ee"
+	if weather.Type == domain.WeatherRainy {
+		color = "#6e7e8a"
+	}
+	for _, puff := range weather.CloudPuffs {
 		if puff.Vanishing {
 			continue
 		}
-		ctx.SetAlpha(cloudAlpha * puff.Alpha)
-		color := "#d0d8e0"
-		if weather.Type == domain.WeatherRainy {
-			color = "#7a8898"
-		}
+		r := puff.Radius
+		cx, cy := puff.Center.X, puff.Center.Y
+
+		// Render each puff as 4 overlapping lobes — base + left + right + crown.
+		// Together they form the billowing silhouette of a real cloud mass.
 		ctx.SetFill(color)
+		ctx.SetAlpha(puff.Alpha * 0.82)
 		ctx.BeginPath()
-		ctx.Arc(puff.Center.X, puff.Center.Y, puff.Radius, 0, math.Pi*2)
+		ctx.Arc(cx, cy, r, 0, math.Pi*2)
 		ctx.Fill()
-		_ = i
-		_ = cw
+
+		ctx.SetAlpha(puff.Alpha * 0.75)
+		ctx.BeginPath()
+		ctx.Arc(cx-r*0.55, cy-r*0.2, r*0.72, 0, math.Pi*2)
+		ctx.Fill()
+
+		ctx.BeginPath()
+		ctx.Arc(cx+r*0.55, cy-r*0.2, r*0.72, 0, math.Pi*2)
+		ctx.Fill()
+
+		ctx.SetAlpha(puff.Alpha * 0.70)
+		ctx.BeginPath()
+		ctx.Arc(cx, cy-r*0.45, r*0.60, 0, math.Pi*2)
+		ctx.Fill()
 	}
 	ctx.SetAlpha(1)
 }
 
 // darken returns a hex color darkened by factor (0–1).
 func darken(hex string, factor float64) string {
-	// simple approximation using CSS brightness filter via rgba
-	_ = hex
-	return fmt.Sprintf("rgba(0,0,0,%.2f)", 1-factor)
+	if len(hex) == 7 && hex[0] == '#' {
+		r := hexVal(hex[1:3])
+		g := hexVal(hex[3:5])
+		b := hexVal(hex[5:7])
+		r2 := uint8(float64(r) * (1 - factor))
+		g2 := uint8(float64(g) * (1 - factor))
+		b2 := uint8(float64(b) * (1 - factor))
+		return fmt.Sprintf("#%02x%02x%02x", r2, g2, b2)
+	}
+	return fmt.Sprintf("rgba(0,0,0,%.2f)", factor)
+}
+
+func hexVal(s string) uint8 {
+	var v uint8
+	for _, c := range s {
+		v <<= 4
+		switch {
+		case c >= '0' && c <= '9':
+			v |= uint8(c - '0')
+		case c >= 'a' && c <= 'f':
+			v |= uint8(c-'a') + 10
+		case c >= 'A' && c <= 'F':
+			v |= uint8(c-'A') + 10
+		}
+	}
+	return v
 }

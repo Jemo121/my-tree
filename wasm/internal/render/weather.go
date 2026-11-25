@@ -21,10 +21,11 @@ func SpawnRainDrops(w *domain.WeatherState, cw, ch float64) {
 		x := rand.Float64() * cw
 		angle := math.Pi*0.1 + w.WindAngle*0.3
 		speed := config.RainDropSpeed * (0.8 + rand.Float64()*0.4)
+		groundY := ch * config.GroundFrac
 		w.RainDrops = append(w.RainDrops, domain.RainDrop{
 			Pos:     domain.Vec2{X: x, Y: -10},
 			Vel:     domain.Vec2{X: math.Sin(angle) * speed * 0.3, Y: math.Cos(angle) * speed},
-			MaxLife: (ch + 20) / speed,
+			MaxLife: (groundY + 10) / speed,
 		})
 	}
 }
@@ -73,21 +74,36 @@ func drawWind(ctx *Ctx, w *domain.WeatherState) {
 }
 
 // UpdateCloudPuffs initialises or repopulates cloud puffs on the weather state.
+// Count and opacity scale with weather intensity.
 func UpdateCloudPuffs(w *domain.WeatherState, cw, ch float64) {
+	live := w.CloudPuffs[:0]
+	for _, p := range w.CloudPuffs {
+		if !p.Vanishing {
+			live = append(live, p)
+		}
+	}
+	w.CloudPuffs = live
 	if len(w.CloudPuffs) > 0 {
 		return
 	}
-	count := 2 + int(w.CloudCover*float64(config.MaxCloudPuffs))
+
+	// Scale puff count with intensity: Low=2, Medium=4, Heavy=6.
+	count := 2 + int(w.Intensity)*2
+	if w.Type == domain.WeatherRainy {
+		count += 2 // rainy always adds more cloud cover
+	}
+	baseAlpha := 0.55 + float64(w.Intensity)*0.15 // Low=0.55, Med=0.70, High=0.85
+
 	for i := 0; i < count; i++ {
-		x := cw * (0.1 + rand.Float64()*0.8)
-		y := ch * (0.05 + rand.Float64()*0.2)
-		r := cw*0.06 + rand.Float64()*cw*0.08
+		x := cw * (0.08 + rand.Float64()*0.84)
+		y := ch * (0.04 + rand.Float64()*0.18)
+		r := cw*0.045 + rand.Float64()*cw*0.055
 		puff := domain.CloudPuff{
 			Center: domain.Vec2{X: x, Y: y},
 			Radius: r,
-			Alpha:  0.8 + rand.Float64()*0.2,
+			Alpha:  baseAlpha + rand.Float64()*0.1,
 		}
-		puff.Bounds = domain.RectFromCenter(puff.Center, r, r)
+		puff.Bounds = domain.RectFromCenter(puff.Center, r*1.5, r*1.2)
 		w.CloudPuffs = append(w.CloudPuffs, puff)
 	}
 }

@@ -76,6 +76,14 @@ func main() {
 		season := domain.SeasonFromTime(now2)
 		tod := domain.TimeOfDayFromTime(now2)
 		cs := config.Get(season, tod)
+		// Scale fog with weather intensity — the palette bakes a base FogAlpha
+		// for time-of-day haze; rainy/cloudy weather amplifies it.
+		switch weather.Type {
+		case domain.WeatherRainy:
+			cs.FogAlpha = cs.FogAlpha + 0.08 + float64(weather.Intensity)*0.06
+		case domain.WeatherCloudy:
+			cs.FogAlpha = cs.FogAlpha + float64(weather.Intensity)*0.04
+		}
 
 		render.SetCSSVar("--sky-top", cs.SkyTop)
 		render.SetCSSVar("--sky-bottom", cs.SkyBottom)
@@ -173,7 +181,7 @@ func handleClick(
 	case domain.ActionShakeRoots:
 		shakes.Add(render.ShakeEarth, click, 5)
 	case domain.ActionSplashCloud, domain.ActionVanishCloud:
-		render.VanishCloud(weather, target.CloudIdx)
+		// Clouds are atmosphere — clicking does nothing.
 	case domain.ActionShowSign:
 		signSwing.Trigger()
 		render.UpdateSignPanel(treeLayout, signCfg)

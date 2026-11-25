@@ -117,12 +117,13 @@ func drawRootZone(ctx *Ctx, layout *domain.TreeLayout, cs config.ColorSet) {
 	w := sb.Max.X - sb.Min.X
 	h := sb.Max.Y - sb.Min.Y
 
-	// Root zone soil gradient
-	soil := ctx.LinearGradient(0, sb.Min.Y, 0, sb.Max.Y)
-	AddColorStop(soil, 0, cs.Ground)
-	AddColorStop(soil, 1, darken(cs.Ground, 0.5))
-	ctx.SetFillGradient(soil)
-	ctx.FillRect(sb.Min.X, sb.Min.Y, w, h)
+	// No filled rectangle — the background ground already paints this area.
+	// A vignette gradient darkens the underground zone without hard edges.
+	vignette := ctx.LinearGradient(0, sb.Min.Y, 0, sb.Max.Y)
+	AddColorStop(vignette, 0, "rgba(0,0,0,0)")
+	AddColorStop(vignette, 1, "rgba(0,0,0,0.35)")
+	ctx.SetFillGradient(vignette)
+	ctx.FillRect(0, sb.Min.Y, ctx.W, h)
 
 	// Roots (sinuous lines radiating from trunk base)
 	ctx.SetStroke(cs.RootCol)
