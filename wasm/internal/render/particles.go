@@ -109,8 +109,8 @@ func (ps *ParticleSystem) EmitLeaves(crownX, crownY, crownRadius, windStrength f
 	r := rand.Float64() * crownRadius * 0.85
 	ps.leaves = append(ps.leaves, Particle{
 		Pos:   domain.Vec2{X: crownX + r*math.Cos(angle), Y: crownY + r*math.Sin(angle)*0.6},
-		Vel:   domain.Vec2{X: windStrength*30 + (rand.Float64()-0.5)*12, Y: 28 + rand.Float64()*18},
-		Max:   3.0 + rand.Float64()*2.0,
+		Vel:   domain.Vec2{X: windStrength*20 + (rand.Float64()-0.5)*18, Y: 8 + rand.Float64()*10},
+		Max:   4.0 + rand.Float64()*3.0,
 		Size:  3 + rand.Float64()*3,
 		Color: leafColors[rand.IntN(4)],
 	})

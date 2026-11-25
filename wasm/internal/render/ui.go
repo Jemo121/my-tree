@@ -44,11 +44,11 @@ func DrawSign(ctx *Ctx, layout *domain.TreeLayout, swing float64) {
 	ctx.FillRect(leftPost, sb.Max.Y, postW, postH)
 	ctx.FillRect(rightPost, sb.Max.Y, postW, postH)
 
-	// Board — rotates around the post tops on swing.
+	// Board — pivots at the top edge (hanging-sign swing, not seesaw).
 	ctx.Save()
-	ctx.Translate(cx, sb.Max.Y)
+	ctx.Translate(cx, sb.Min.Y)
 	ctx.Rotate(swing)
-	ctx.Translate(-cx, -sb.Max.Y)
+	ctx.Translate(-cx, -sb.Min.Y)
 
 	ctx.BeginPath()
 	ctx.MoveTo(sb.Min.X+4, sb.Min.Y)

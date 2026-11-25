@@ -88,6 +88,7 @@ type RainDrop struct {
 // CloudPuff is a visual cloud element.
 type CloudPuff struct {
 	Center Vec2
+	Vel    Vec2 // horizontal drift velocity (px/s)
 	Radius float64
 	Alpha  float64
 	Bounds Rect
@@ -162,6 +163,7 @@ func (w *WeatherState) Tick(dt float64) {
 	if w.Type == WeatherRainy {
 		w.tickRain(dt)
 	}
+	w.tickClouds(dt)
 	if w.Type == WeatherWindy {
 		w.WindAngle += (rand.Float64()*0.04 - 0.02)
 		w.WindSpeed = w.baseWindSpeed() * (0.8 + rand.Float64()*0.4)
@@ -278,6 +280,26 @@ func (w *WeatherState) tickRain(dt float64) {
 		}
 	}
 	w.RainDrops = live
+}
+
+// tickClouds advances cloud drift positions, wrapping off-screen puffs back to the entry edge.
+// canvasW is unknown here, so we use a generous 4000px sentinel; render clips naturally.
+func (w *WeatherState) tickClouds(dt float64) {
+	const wrap = 4000.0
+	for i := range w.CloudPuffs {
+		p := &w.CloudPuffs[i]
+		p.Center.X += p.Vel.X * dt
+		p.Center.Y += p.Vel.Y * dt
+		// Wrap horizontally when fully off either edge.
+		r := p.Radius * 1.5
+		if p.Center.X > wrap+r {
+			p.Center.X = -r
+		} else if p.Center.X < -r {
+			p.Center.X = wrap + r
+		}
+		p.Bounds.Min.X = p.Center.X - r
+		p.Bounds.Max.X = p.Center.X + r
+	}
 }
 
 // IsFlashing reports whether a lightning flash is active.

@@ -54,13 +54,15 @@ func Build(members []*domain.Member, cw, ch float64) *domain.TreeLayout {
 		Min: domain.Vec2{X: cx - rootRadius, Y: ry},
 		Max: domain.Vec2{X: cx + rootRadius, Y: ry + rootRadius*1.5},
 	}
+	// SoilBounds starts at GroundY so the vignette covers the full underground area.
 	layout.SoilBounds = domain.Rect{
-		Min: domain.Vec2{X: cx - cw*0.35, Y: trunkBaseY},
+		Min: domain.Vec2{X: cx - cw*0.35, Y: layout.GroundY},
 		Max: domain.Vec2{X: cx + cw*0.35, Y: ch * config.RootFrac},
 	}
 
-	// Wooden sign (right of trunk by default)
-	signW, signH := cw*config.SignWidthFrac, ch*config.SignHeightFrac
+	// Wooden sign — height derived from width to stay landscape at any viewport.
+	signW := cw * config.SignWidthFrac
+	signH := signW * 0.42 // ~2.4:1 width-to-height ratio
 	signX := trunkBaseX + cw*0.2
 	signY := trunkBaseY - signH - ch*0.05
 	layout.SignBounds = domain.Rect{

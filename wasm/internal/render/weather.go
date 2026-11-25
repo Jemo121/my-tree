@@ -22,10 +22,11 @@ func SpawnRainDrops(w *domain.WeatherState, cw, ch float64) {
 		angle := math.Pi*0.1 + w.WindAngle*0.3
 		speed := config.RainDropSpeed * (0.8 + rand.Float64()*0.4)
 		groundY := ch * config.GroundFrac
+		velY := math.Cos(angle) * speed
 		w.RainDrops = append(w.RainDrops, domain.RainDrop{
 			Pos:     domain.Vec2{X: x, Y: -10},
-			Vel:     domain.Vec2{X: math.Sin(angle) * speed * 0.3, Y: math.Cos(angle) * speed},
-			MaxLife: (groundY + 10) / speed,
+			Vel:     domain.Vec2{X: math.Sin(angle) * speed * 0.3, Y: velY},
+			MaxLife: (groundY + 10) / velY,
 		})
 	}
 }
@@ -94,12 +95,16 @@ func UpdateCloudPuffs(w *domain.WeatherState, cw, ch float64) {
 	}
 	baseAlpha := 0.55 + float64(w.Intensity)*0.15 // Low=0.55, Med=0.70, High=0.85
 
+	// Drift speed: 8–22 px/s, direction from wind angle.
+	driftSpeed := 8.0 + float64(w.Intensity)*7.0
 	for i := 0; i < count; i++ {
 		x := cw * (0.08 + rand.Float64()*0.84)
 		y := ch * (0.04 + rand.Float64()*0.18)
 		r := cw*0.045 + rand.Float64()*cw*0.055
+		speed := driftSpeed * (0.7 + rand.Float64()*0.6)
 		puff := domain.CloudPuff{
 			Center: domain.Vec2{X: x, Y: y},
+			Vel:    domain.Vec2{X: math.Cos(w.WindAngle) * speed, Y: math.Sin(w.WindAngle) * speed * 0.1},
 			Radius: r,
 			Alpha:  baseAlpha + rand.Float64()*0.1,
 		}
