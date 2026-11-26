@@ -42,17 +42,21 @@ test-images:
 	@echo "==> pro-images"
 	$(BATS) tests/pro-images.bats
 
-## Install pre-commit hook (HTML-VAL-01, TEMPLATE-PII-01, YAML-VAL-01, SIZE-CHECK-01)
+## Install pre-commit and pre-push hooks
 install-hooks:
-	@echo "==> Installing pre-commit hook"
+	@echo "==> Installing git hooks"
 	cp tests/pre-commit-hook.sh $(REPO_ROOT)/.git/hooks/pre-commit
 	chmod +x $(REPO_ROOT)/.git/hooks/pre-commit
+	cp tests/pre-push-hook.sh $(REPO_ROOT)/.git/hooks/pre-push
+	chmod +x $(REPO_ROOT)/.git/hooks/pre-push
 	@echo "    Installed: .git/hooks/pre-commit"
+	@echo "    Installed: .git/hooks/pre-push"
 
-## Remove pre-commit hook
+## Remove git hooks
 uninstall-hooks:
-	@echo "==> Removing pre-commit hook"
+	@echo "==> Removing git hooks"
 	rm -f $(REPO_ROOT)/.git/hooks/pre-commit
+	rm -f $(REPO_ROOT)/.git/hooks/pre-push
 
 ## Fetch wasm_exec.js from Go SDK (requires WASM_GO_VERSION, default 1.27.4)
 copy-wasm-exec:

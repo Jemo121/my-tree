@@ -39,16 +39,17 @@ sast:
 html-validate:
   stage: validate
   image: node:26-alpine
+  tags: [local]
   script:
     - npx --yes html-validate@11 "templates/**/*.html" "errors/*.html"
   rules:
     - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
     - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
-    - if: '$CI_COMMIT_BRANCH == "dev"'
 
 size-checker:
   stage: validate
   image: alpine:3.21
+  tags: [local]
   script:
     - |
       find . -not -path './.git/*' -not -name '*.wasm' \
@@ -66,11 +67,11 @@ size-checker:
   rules:
     - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
     - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
-    - if: '$CI_COMMIT_BRANCH == "dev"'
 
 go-compat:
   stage: validate
   image: alpine:3.21
+  tags: [local]
   script:
     - apk add --no-cache wget tar binutils
     - wget -qO /tmp/hugo.tar.gz "https://github.com/gohugoio/hugo/releases/download/v${HUGO_VERSION}/hugo_${HUGO_VERSION}_linux-amd64.tar.gz"
@@ -99,8 +100,9 @@ go-compat:
 shellcheck:
   stage: validate
   image: koalaman/shellcheck-alpine:v0.11.0
+  tags: [local]
   script:
-    - shellcheck tests/pre-commit-hook.sh
+    - shellcheck tests/pre-commit-hook.sh tests/pre-push-hook.sh
   rules:
     - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
     - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
@@ -109,6 +111,7 @@ shellcheck:
 yamllint:
   stage: validate
   image: python:3.13-alpine
+  tags: [local]
   before_script:
     - pip install --no-cache-dir --quiet yamllint==1.38.0
   script:
@@ -116,14 +119,18 @@ yamllint:
   rules:
     - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
     - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
-    - if: '$CI_COMMIT_BRANCH == "dev"'
 
 golang-lint:
   stage: validate
   image: golangci/golangci-lint:v2.15.0-alpine
+  tags: [local]
   variables:
     GOOS: js
     GOARCH: wasm
+    GOLANGCI_LINT_CACHE: ${CI_PROJECT_DIR}/.golangci-cache
+  cache:
+    key: golangci-${CI_COMMIT_REF_SLUG}
+    paths: [.golangci-cache/]
   script:
     - cd wasm && golangci-lint run --config ../.golang.yml ./...
   rules:
@@ -142,9 +149,15 @@ golang-lint:
 wasm-build:
   stage: build
   image: golang:1.27.4-alpine
+  tags: [local]
   variables:
     GOOS: js
     GOARCH: wasm
+    GOPATH: ${CI_PROJECT_DIR}/.go
+    GOCACHE: ${CI_PROJECT_DIR}/.go-cache
+  cache:
+    key: go-wasm-${CI_COMMIT_REF_SLUG}
+    paths: [.go/pkg/mod/, .go-cache/]
   script:
     - apk add --no-cache yq
     - yq -o=json eval '.' data/family/members.yaml > wasm/assets/members.json
