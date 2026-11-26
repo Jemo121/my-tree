@@ -39,7 +39,6 @@ sast:
 html-validate:
   stage: validate
   image: node:26-alpine
-  tags: [local]
   script:
     - npx --yes html-validate@11 "templates/**/*.html" "errors/*.html"
   rules:
@@ -71,7 +70,6 @@ size-checker:
 go-compat:
   stage: validate
   image: alpine:3.21
-  tags: [local]
   script:
     - apk add --no-cache wget tar binutils
     - wget -qO /tmp/hugo.tar.gz "https://github.com/gohugoio/hugo/releases/download/v${HUGO_VERSION}/hugo_${HUGO_VERSION}_linux-amd64.tar.gz"
@@ -100,7 +98,6 @@ go-compat:
 shellcheck:
   stage: validate
   image: koalaman/shellcheck-alpine:v0.11.0
-  tags: [local]
   script:
     - shellcheck tests/pre-commit-hook.sh tests/pre-push-hook.sh
   rules:
@@ -111,7 +108,6 @@ shellcheck:
 yamllint:
   stage: validate
   image: python:3.13-alpine
-  tags: [local]
   before_script:
     - pip install --no-cache-dir --quiet yamllint==1.38.0
   script:
@@ -149,7 +145,6 @@ golang-lint:
 wasm-build:
   stage: build
   image: golang:1.27.4-alpine
-  tags: [local]
   variables:
     GOOS: js
     GOARCH: wasm
