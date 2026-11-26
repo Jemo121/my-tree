@@ -1,1 +1,21 @@
-<!-- wooden sign rendered by WASM canvas — see wasm/internal/render/ui.go -->
+<div id="sign-panel" hidden aria-modal="true" role="dialog" aria-labelledby="sign-title">
+  <div id="sign-panel-inner">
+    <button id="sign-panel-close"
+            aria-label="{{ i18n "sign_close" }}">&#215;</button>
+    <p id="sign-title">{{ i18n "sign_title" (dict "Title" .Site.Params.family_name) }}</p>
+    <dl>
+      <div class="sign-row">
+        <dt id="sign-label-active">{{ i18n "sign_active" }}</dt>
+        <dd id="sign-active">—</dd>
+      </div>
+      <div class="sign-row">
+        <dt id="sign-label-roots">{{ i18n "sign_roots" }}</dt>
+        <dd id="sign-roots">—</dd>
+      </div>
+      <div class="sign-row">
+        <dt>{{ i18n "sign_est" }}</dt>
+        <dd>{{ .Site.Params.established }}</dd>
+      </div>
+    </dl>
+  </div>
+</div>
