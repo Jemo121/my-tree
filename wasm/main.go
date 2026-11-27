@@ -183,7 +183,7 @@ func handleClick(
 	case domain.ActionSplashCloud, domain.ActionVanishCloud:
 		// Clouds are atmosphere — clicking does nothing.
 	case domain.ActionShowSign:
-		signSwing.Trigger()
+		signSwing.Reset()
 		render.UpdateSignPanel(treeLayout, signCfg)
 		render.ShowSignPanel()
 	}

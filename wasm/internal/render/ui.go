@@ -20,6 +20,9 @@ const signSwingDecay = 0.88
 // Trigger starts a swing with an initial kick.
 func (s *SignSwinger) Trigger() { s.vel = 0.18 }
 
+// Reset stops the swing and returns the sign to upright.
+func (s *SignSwinger) Reset() { s.vel = 0; s.Angle = 0 }
+
 // Tick advances the swing physics (call each frame).
 func (s *SignSwinger) Tick() {
 	s.vel *= signSwingDecay
