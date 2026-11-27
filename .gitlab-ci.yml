@@ -8,6 +8,7 @@ variables:
   HUGO_VERSION: "0.170.1"
   GO_VERSION: "1.26"
   WASM_GO_VERSION: "1.27.4"
+  GIT_FETCH_EXTRA_FLAGS: "--prune --force"
 
 # ── Security ──────────────────────────────────────────────────────────────────
 
