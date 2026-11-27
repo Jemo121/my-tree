@@ -9,6 +9,7 @@ variables:
   GO_VERSION: "1.26"
   WASM_GO_VERSION: "1.27.4"
   GIT_FETCH_EXTRA_FLAGS: "--prune --force"
+  GIT_DEPTH: "0"
 
 # ── Security ──────────────────────────────────────────────────────────────────
 
