@@ -129,7 +129,9 @@ golang-lint:
     GOARCH: wasm
     GOLANGCI_LINT_CACHE: ${CI_PROJECT_DIR}/.golangci-cache
   cache:
-    key: golangci-${CI_COMMIT_REF_SLUG}
+    key:
+      prefix: golangci
+      files: [wasm/go.sum, .golang.yml]
     paths: [.golangci-cache/]
   script:
     - cd wasm && golangci-lint run --config ../.golang.yml ./...
